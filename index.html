@@ -1006,92 +1006,28 @@
                     </div>
                 </div>
 
-                <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
-                <div class="pt-8 border-t border-mique-lavender">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【${p.name}】多圖 EDM 宣傳海報藝廊</h3>
-                            <p class="text-xs text-gray-500 mt-0.5">可一次選擇並批次上傳多張 EDM 圖片展示長版海報</p>
-                        </div>
-                        <label class="cursor-pointer bg-mique-lavender text-mique-purple px-4 py-2 rounded-full text-xs font-bold hover:bg-mique-purple hover:text-white transition">
-                            <i class="fa-solid fa-cloud-arrow-up mr-1"></i> 批次新增 EDM 圖片
-                            <input type="file" multiple accept="image/*" class="hidden" onchange="handleMultipleEDMUpload(event, ${p.id})">
-                        </label>
-                    </div>
-
-                    <div id="product-edm-gallery-${p.id}">
-                        ${renderMultiEDMHTML(p)}
-                    </div>
-                </div>
-            </div>`;
+                <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT (🔒 READ-ONLY SECURED VERSION) -->
+<div class="pt-8 border-t border-mique-lavender">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h3 class="text-lg font-bold text-mique-purple font-serif-custom">
+                <i class="fa-solid fa-images text-mique-gold mr-2"></i> 【\${p.name}】宣傳海報藝廊
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5">MIQUE 蜜刻官方正品保障與詳細說明</p>
+        </div>
+    </div>
+    
+    <!-- 正式呈現的多圖海報區塊，採用最安全的動態陣列載入，外人絕對無法竄改 -->
+    <div class="flex flex-col items-center gap-8 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">
+        <!-- 💡 這裡會根據最上方的 productsData 自動抓取圖片，每一款產品點開都會是正確的海報！ -->
+        \${(p.edmImages && p.edmImages.length > 0) 
+            ? p.edmImages.map(imgSrc => `<img src="\${imgSrc}" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="MIQUE EDM">`).join('')
+            : `<p class="text-center text-xs text-gray-400 py-6">此產品目前尚無批次上傳之 EDM 宣傳圖片</p>`
         }
+    </div>
+</div>`
 
-        function renderMultiEDMHTML(product) {
-            if (product.edmImages && product.edmImages.length > 0) {
-                return `
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between text-xs text-gray-500 border-b pb-2">
-                        <span>已載入 <strong>${product.edmImages.length}</strong> 張 EDM 圖檔</span>
-                    </div>
-                    <div class="space-y-4 p-2 bg-gray-50 rounded-2xl border">
-                        ${product.edmImages.map((imgSrc, idx) => `
-                        <div class="relative group rounded-xl overflow-hidden border shadow-sm">
-                            <span class="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full z-10">EDM Slide #${idx + 1}</span>
-                            <button onclick="removeSingleEDM(${product.id}, ${idx})" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs opacity-0 group-hover:opacity-100 transition z-10">×</button>
-                            <img src="${imgSrc}" class="w-full h-auto object-cover">
-                        </div>`).join('')}
-                    </div>
-                </div>`;
-            } else {
-                return `
-                <div class="edm-dashed-box p-8 rounded-3xl text-center space-y-4">
-                    <i class="fa-solid fa-images text-3xl text-mique-gold"></i>
-                    <div>
-                        <h4 class="font-bold text-base text-mique-purple">此產品目前尚無批次上傳之 EDM 宣傳圖片</h4>
-                        <p class="text-xs text-gray-500 mt-1">您可以點擊下方按鈕，上傳一份或多份圖片檔以呈現長頁面視覺設計</p>
-                    </div>
-                    <label class="inline-flex items-center gap-2 cursor-pointer bg-mique-purple text-white px-6 py-2.5 rounded-full text-xs font-bold shadow hover:bg-mique-gold hover:text-mique-purple transition">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span>選擇多張 EDM 宣傳圖片</span>
-                        <input type="file" multiple accept="image/*" class="hidden" onchange="handleMultipleEDMUpload(event, ${product.id})">
-                    </label>
-                </div>`;
-            }
-        }
-
-        function handleMultipleEDMUpload(event, productId) {
-            const files = Array.from(event.target.files);
-            if (!files || files.length === 0) return;
-
-            const product = productsData.find(p => p.id === productId);
-            if (!product) return;
-
-            let loadedCount = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    product.edmImages.push(e.target.result);
-                    loadedCount++;
-                    if (loadedCount === files.length) {
-                        renderIndividualProductPage(productId);
-                        renderOverviewGrid();
-                        renderSecretSeriesGrid();
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function removeSingleEDM(productId, index) {
-            const product = productsData.find(p => p.id === productId);
-            if (product && product.edmImages) {
-                product.edmImages.splice(index, 1);
-                renderIndividualProductPage(productId);
-                renderOverviewGrid();
-                renderSecretSeriesGrid();
-            }
-        }
-
+        
         function switchCyclePhase(phaseKey) {
             const phase = cycleGuideData[phaseKey];
             if (!phase) return;
