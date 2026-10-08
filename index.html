@@ -801,10 +801,11 @@
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
             
             // Check if pageId is an individual product view (#product-1 ~ #product-5)
-            if (pageId.startsWith('product-') && !pageId.includes('overview') && !pageId.includes('secret')) {
-                const prodNum = parseInt(pageId.split('-')[1]);
-                renderIndividualProductPage(prodNum);
-            }
+              if (pageId.startsWith('product-') && !pageId.includes('overview') && !pageId.includes('secret')) {
+            const prodNum = parseInt(pageId.split('-')[1]);
+            renderIndividualProductPage(prodNum);
+            renderProductEDMs(prodNum); 
+        }
 
             const targetPage = document.getElementById(`page-${pageId}`);
             if (targetPage) {
