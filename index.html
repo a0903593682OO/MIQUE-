@@ -883,7 +883,7 @@
                         <span class="text-[10px] text-gray-400 block">${p.volume}</span>
                     </div>
                     <button onclick="navigateTo('product-${p.id}')" class="px-3.5 py-1.5 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition">
-                        詳情與多圖 EDM (${edmCount})
+                        詳情(${edmCount})
                     </button>
                 </div>
             </div>`;
@@ -948,27 +948,31 @@
                         </div>
                     </div>
                 </div>
+               <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT (🔒 READ-ONLY SECURED VERSION) -->
+<div class="pt-8 border-t border-mique-lavender">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h3 class="text-lg font-bold text-mique-purple font-serif-custom">
+                <i class="fa-solid fa-images text-mique-gold mr-2"></i> 【${p.name}】宣傳海報藝廊
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5">MIQUE 蜜刻官方正品保障與詳細說明</p>
+        </div>
+    </div>
+    
+    <!-- 正式呈現的長版 EDM 海報圖片區塊 -->
+    <div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">
+        <div class="flex flex-col items-center gap-8 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">
+        <img src="慕斯EDM1.jpg" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="${p.name} EDM 1">
+    
+        <img src="慕斯EDM2.jpg" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="${p.name} EDM 2">
+        
+        <img src="慕斯EDM3.jpg" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="${p.name} EDM 3">
 
-                <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
-                <div class="pt-8 border-t border-mique-lavender">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【${p.name}】多圖 EDM 宣傳海報藝廊</h3>
-                            <p class="text-xs text-gray-500 mt-0.5">可一次選擇並批次上傳多張 EDM 圖片展示長版海報</p>
-                        </div>
-                        <label class="cursor-pointer bg-mique-lavender text-mique-purple px-4 py-2 rounded-full text-xs font-bold hover:bg-mique-purple hover:text-white transition">
-                            <i class="fa-solid fa-cloud-arrow-up mr-1"></i> 批次新增 EDM 圖片
-                            <input type="file" multiple accept="image/*" class="hidden" onchange="handleMultipleEDMUpload(event, ${p.id})">
-                        </label>
-                    </div>
-
-                    <div id="product-edm-gallery-${p.id}">
-                        ${renderMultiEDMHTML(p)}
-                    </div>
-                </div>
-            </div>`;
-        }
-
+        <img src="慕斯EDM4.jpg" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="${p.name} EDM 3">
+   
+        <img src="慕斯EDM5.jpg" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="${p.name} EDM 3">
+    </div>
+</div>`
         function renderMultiEDMHTML(product) {
             if (product.edmImages && product.edmImages.length > 0) {
                 return `
