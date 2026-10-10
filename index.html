@@ -1262,8 +1262,8 @@ function updateCartUI() {
         <div class="flex items-center justify-between p-3 border rounded-xl bg-white border-gray-100 shadow-sm gap-3">
             <div class="flex-1 min-w-0">
                 <h4 class="font-bold text-xs text-mique-purple truncate">${i.name}</h4>
-	<span class="text-[10px] text-gray-500 block mt-0.5">$${i.price}</span>
-
+                <span class="text-[10px] text-gray-500 block mt-0.5">$$${i.price}</span>
+            </div>
             
             <!-- 數量加減控制器 -->
             <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
@@ -1274,7 +1274,7 @@ function updateCartUI() {
             
             <!-- 總額與刪除垃圾桶 -->
             <div class="flex items-center gap-2 flex-shrink-0">
-            <span class="font-bold text-xs text-mique-purple">$${i.price * i.qty}</span>
+                <span class="font-bold text-xs text-mique-purple">$$${i.price * i.qty}</span>
                 <button onclick="removeFromCart(${i.id})" class="text-gray-400 hover:text-red-500 transition px-1">
                     <i class="fa-regular fa-trash-can text-xs"></i>
                 </button>
@@ -1283,7 +1283,8 @@ function updateCartUI() {
     `).join('');
     
     const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-   document.getElementById('cart-total').textContent = '$${total}';
+    document.getElementById('cart-total').textContent = `$$${total}`;
+}
 
 function checkoutCart() {
     alert('感謝預訂！MIQUE 客服（mique20261207@gmail.com）將竭誠為您服務。');
@@ -1291,6 +1292,7 @@ function checkoutCart() {
     updateCartUI();
     toggleCartDrawer();
 }
+
 
     </script>
 </body>
