@@ -546,7 +546,7 @@
                     </button>
                     <button onclick="switchCyclePhase('menstrual')" id="tab-menstrual" class="cycle-tab-btn p-4 rounded-2xl bg-white border border-gray-200 transition text-left hover:border-mique-purple">
                         <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phase 04</div>
-                        <h4 class="font-bold text-gray-700 text-base mt-0.5">行經期 (D22-28)</h4>
+                        <h4 class="font-bold text-gray-700 text-base mt-0.5">月經期 (D22-28)</h4>
                         <span class="text-[11px] text-gray-500 block mt-1">敏弱乾燥期 ｜ 溫和安撫</span>
                     </button>
                 </div>
@@ -1199,42 +1199,91 @@
         }
 
         function addToCart(productId) {
-            const existing = cart.find(i => i.id === productId);
-            if (existing) existing.qty += 1;
-            else {
-                const p = productsData.find(item => item.id === productId);
-                if (p) cart.push({ ...p, qty: 1 });
-            }
-            updateCartUI();
-            toggleCartDrawer();
-        }
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+        existing.qty += 1; // 修正：讓數量可以正確累加
+    } else {
+        const p = productsData.find(item => item.id === productId);
+        if (p) cart.push({ ...p, qty: 1 });
+    }
+    updateCartUI();
+    toggleCartDrawer();
+}
 
-        function updateCartUI() {
-            document.getElementById('cart-count-badge').textContent = cart.reduce((s, i) => s + i.qty, 0);
-            const list = document.getElementById('cart-items-list');
-            if (cart.length === 0) {
-                list.innerHTML = `<p class="text-center text-xs text-gray-400 py-10">購物車目前是空的</p>`;
-                document.getElementById('cart-total').textContent = '$0';
-                return;
-            }
-            list.innerHTML = cart.map(i => `
-            <div class="flex items-center justify-between p-3 border rounded-xl">
-                <div>
-                    <h4 class="font-bold text-xs text-mique-purple">${i.name}</h4>
-                    <span class="text-[10px] text-gray-500">$${i.price} x ${i.qty}</span>
-                </div>
-                <span class="font-bold text-xs text-mique-purple">$${i.price * i.qty}</span>
-            </div>`).join('');
-            const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            document.getElementById('cart-total').textContent = `$${total}`;
-        }
+// 核心新增功能 1：增加數量 (+)
+function increaseQty(productId) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.qty += 1;
+        updateCartUI();
+    }
+}
 
-        function checkoutCart() {
-            alert('感謝預訂！MIQUE 客服 (mique20261207@gmail.com) 將竭誠為您服務。');
-            cart = [];
-            updateCartUI();
-            toggleCartDrawer();
+// 核心新增功能 2：減少數量 (-)
+function decreaseQty(productId) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.qty -= 1;
+        if (item.qty <= 0) {
+            removeFromCart(productId); // 數量變 0 直接刪除商品
+            return;
         }
+        updateCartUI();
+    }
+}
+
+// 核心新增功能 3：刪除商品 (垃圾桶)
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    updateCartUI();
+}
+
+function updateCartUI() {
+    document.getElementById('cart-count-badge').textContent = cart.reduce((s, i) => s + i.qty, 0);
+    const list = document.getElementById('cart-items-list');
+    
+    if (cart.length === 0) {
+        list.innerHTML = `<p class="text-center text-xs text-gray-400 py-10">購物車目前是空的</p>`;
+        document.getElementById('cart-total').textContent = '\$0';
+        return;
+    }
+    
+    // 核心更新：渲染出帶有「增加、減少、刪除」按鈕的精美購物車項目
+    list.innerHTML = cart.map(i => `
+        <div class="flex items-center justify-between p-3 border rounded-xl bg-white border-gray-100 shadow-sm gap-3">
+            <div class="flex-1 min-w-0">
+                <h4 class="font-bold text-xs text-mique-purple truncate">${i.name}</h4>
+                <span class="text-[10px] text-gray-500 block mt-0.5">$$${i.price}</span>
+            </div>
+            
+            <!-- 數量加減控制器 -->
+            <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
+                <button onclick="decreaseQty(${i.id})" class="px-2 py-0.5 text-gray-500 hover:bg-gray-200 transition text-xs font-bold">-</button>
+                <span class="px-2 text-xs font-medium text-gray-700 font-mono">${i.qty}</span>
+                <button onclick="increaseQty(${i.id})" class="px-2 py-0.5 text-gray-500 hover:bg-gray-200 transition text-xs font-bold">+</button>
+            </div>
+            
+            <!-- 總額與刪除垃圾桶 -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="font-bold text-xs text-mique-purple">$$${i.price * i.qty}</span>
+                <button onclick="removeFromCart(${i.id})" class="text-gray-400 hover:text-red-500 transition px-1">
+                    <i class="fa-regular fa-trash-can text-xs"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+    document.getElementById('cart-total').textContent = `$$${total}`;
+}
+
+function checkoutCart() {
+    alert('感謝預訂！MIQUE 客服（mique20261207@gmail.com）將竭誠為您服務。');
+    cart = [];
+    updateCartUI();
+    toggleCartDrawer();
+}
+
     </script>
 </body>
 </html>
