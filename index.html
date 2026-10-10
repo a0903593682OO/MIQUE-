@@ -1262,7 +1262,7 @@ function updateCartUI() {
         <div class="flex items-center justify-between p-3 border rounded-xl bg-white border-gray-100 shadow-sm gap-3">
             <div class="flex-1 min-w-0">
                 <h4 class="font-bold text-xs text-mique-purple truncate">${i.name}</h4>
-                <span class="text-[10px] text-gray-500 block mt-0.5">$$${i.price}</span>
+                <span class="text-[10px] text-gray-500 block mt-0.5">${i.price}</span>
             </div>
             
             <!-- 數量加減控制器 -->
@@ -1283,7 +1283,7 @@ function updateCartUI() {
     `).join('');
     
     const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-    document.getElementById('cart-total').textContent = `$$${total}`;
+    document.getElementById('cart-total').textContent = `${total}`;
 }
 
 function checkoutCart() {
