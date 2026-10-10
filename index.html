@@ -1274,7 +1274,7 @@ function updateCartUI() {
             
             <!-- 總額與刪除垃圾桶 -->
             <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="font-bold text-xs text-mique-purple">$$${i.price * i.qty}</span>
+                <span class="font-bold text-xs text-mique-purple">${i.price * i.qty}</span>
                 <button onclick="removeFromCart(${i.id})" class="text-gray-400 hover:text-red-500 transition px-1">
                     <i class="fa-regular fa-trash-can text-xs"></i>
                 </button>
