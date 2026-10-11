@@ -1257,33 +1257,34 @@ function updateCartUI() {
         return;
     }
     
-    // 核心更新：渲染出帶有「增加、減少、刪除」按鈕的精美購物車項目
-    list.innerHTML = cart.map(i => `
-        <div class="flex items-center justify-between p-3 border rounded-xl bg-white border-gray-100 shadow-sm gap-3">
-            <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-xs text-mique-purple truncate">${i.name}</h4>
-                <span class="text-[10px] text-gray-500 block mt-0.5">$$${i.price}</span>
+          // 核心更新：渲染出帶有「增加、減少、刪除」按鈕的精美購物車項目
+        list.innerHTML = cart.map(i => `
+            <div class="flex items-center justify-between p-3 border rounded-xl bg-white border-gray-100 shadow-sm gap-3">
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-bold text-xs text-mique-purple truncate">${i.name}</h4>
+                    <span class="text-[10px] text-gray-500 block mt-0.5">$${i.price}</span>
+                </div>
+                
+                <!-- 數量加減控制器 -->
+                <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
+                    <button onclick="decreaseQty(${i.id})" class="px-2 py-0.5 text-gray-500 hover:bg-gray-200 transition text-xs font-bold">-</button>
+                    <span class="px-2 text-xs font-medium text-gray-700 font-mono">${i.qty}</span>
+                    <button onclick="increaseQty(${i.id})" class="px-2 py-0.5 text-gray-500 hover:bg-gray-200 transition text-xs font-bold">+</button>
+                </div>
+                
+                <!-- 總額與刪除垃圾桶 -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="font-bold text-xs text-mique-purple">$${i.price * i.qty}</span>
+                    <button onclick="removeFromCart(${i.id})" class="text-gray-400 hover:text-red-500 transition px-1">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
+                    </button>
+                </div>
             </div>
-            
-            <!-- 數量加減控制器 -->
-            <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
-                <button onclick="decreaseQty(${i.id})" class="px-2 py-0.5 text-gray-500 hover:bg-gray-200 transition text-xs font-bold">-</button>
-                <span class="px-2 text-xs font-medium text-gray-700 font-mono">${i.qty}</span>
-                <button onclick="increaseQty(${i.id})" class="px-2 py-0.5 text-gray-500 hover:bg-gray-200 transition text-xs font-bold">+</button>
-            </div>
-            
-            <!-- 總額與刪除垃圾桶 -->
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="font-bold text-xs text-mique-purple">$$${i.price * i.qty}</span>
-                <button onclick="removeFromCart(${i.id})" class="text-gray-400 hover:text-red-500 transition px-1">
-                    <i class="fa-regular fa-trash-can text-xs"></i>
-                </button>
-            </div>
-        </div>
-    `).join('');
-    
-    const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-    document.getElementById('cart-total').textContent = `$$${total}`;
+        `).join('');
+        
+        const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        document.getElementById('cart-total').textContent = `$${total}`;
+
 }
 
 function checkoutCart() {
