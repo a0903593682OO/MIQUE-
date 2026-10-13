@@ -959,12 +959,12 @@
                     </div>
 
                     <!-- 🚀 高階優化：直接在 HTML 字串內部透過「安全 for 迴圈字串相加」，完美避開所有樣板字串當掉衝突！ -->
-                    <div id="product-edm-gallery-\${p.id}">
-                        \${(() => {
-                            // 💡 在這裡設定你五款產品各自專屬的 GitHub 圖片名稱清單（有幾張就填幾張，空格換成 %20）
+                    <!-- 🔒 徹底移除所有反斜線，讓圖片對照表真正執行，海報一秒亮相！ -->
+                    <div id="product-edm-gallery-${p.id}">
+                        ${(() => {
                             const edmMapping = {
-                                1: ["第二組MIQUE%204彩.jpg"], // 蜜境保濕前導水
-                                2: ["第二組MIQUE%204彩.jpg"], // 蜜方淨瑕調理凝膠 (可隨時在此更換為新海報檔名)
+                                1: ["第二組MIQUE%204彩.jpg"], 
+                                2: ["第二組MIQUE%204彩.jpg"], 
                                 3: ["產品3海報.jpg"],
                                 4: ["產品4海報.jpg"],
                                 5: ["產品5海報.jpg"]
@@ -983,9 +983,7 @@
                             return htmlResult;
                         })()}
                     </div>
-                </div>
-            </div>`;
-        }
+
 
         // 🔒 安全停用原有的舊函數，不執行任何動作，徹底消滅死循環、防範破圖並恢復首頁完美點擊
         function renderMultiEDMHTML(product) { return ''; }
