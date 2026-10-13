@@ -894,7 +894,7 @@
             });
         }
 
-        function renderIndividualProductPage(productId) {
+               function renderIndividualProductPage(productId) {
             const p = productsData.find(item => item.id === productId);
             if (!p) return;
 
@@ -917,38 +917,22 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     <div class="bg-mique-lavender/40 rounded-3xl p-8 text-center border border-mique-lavender">
                         ${generateProductSVG(p.svgType)}
-                        <span class="inline-block mt-4 text-xs font-bold text-mique-gold-dark bg-white px-3 py-1 rounded-full shadow-sm">${p.tag} ｜ ${p.volume}</span>
+                        <span class="inline-block mt-4 text-xs font-bold text-mique-gold-dark bg-white px-3 py-1 rounded-full shadow-sm">${p.tag}</span>
                     </div>
 
                     <div class="space-y-4">
                         <h1 class="text-3xl font-bold font-serif-custom text-mique-purple">${p.name}</h1>
                         <p class="text-sm text-gray-600 leading-relaxed">${p.desc}</p>
-
-                        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
-                            <span class="text-xs font-bold text-mique-purple block"><i class="fa-solid fa-leaf text-mique-gold mr-1"></i> 核心亮點成分：</span>
-                            <div class="flex flex-wrap gap-2">
-                                ${p.ingredients.map(ing => `<span class="bg-white text-gray-700 text-[11px] px-2.5 py-1 rounded-lg border">${ing}</span>`).join('')}
-                            </div>
-                        </div>
-
-                        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
-                            <span class="text-xs font-bold text-mique-purple block"><i class="fa-solid fa-hand-holding-droplet text-mique-gold mr-1"></i> 建議使用步驟：</span>
-                            <p class="text-xs text-gray-600">${p.usageSteps}</p>
-                        </div>
-
-                        <div class="pt-4 flex items-center justify-between">
-                            <div>
-                                <span class="text-3xl font-bold text-mique-purple font-serif-custom">$${p.price}</span>
-                                <span class="text-xs text-gray-400 block">${p.volume} 尊榮瓶裝</span>
-                            </div>
-                            <button onclick="addToCart(${p.id})" class="px-8 py-3.5 rounded-full bg-mique-purple text-white font-bold text-xs hover:bg-mique-gold hover:text-mique-purple transition shadow-md">
-                                <i class="fa-solid fa-bag-shopping mr-2"></i> 加入購物車
+                        <div class="border-t pt-4 flex justify-between items-center">
+                            <span class="text-xl font-bold text-mique-purple">$${p.price} <span class="text-xs text-gray-400 font-normal">/ ${p.volume}</span></span>
+                            <button onclick="addToCart(${p.id})" class="px-6 py-2.5 bg-mique-purple text-white font-bold rounded-xl shadow-md hover:bg-mique-gold hover:text-mique-purple transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> 加入購物車
                             </button>
                         </div>
                     </div>
                 </div>
 
-              <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
+                <!-- 🔒 核心精準修正：完全拿掉任何反斜線，讓 JavaScript 順暢執行 getMiqueOfficialEDM 函數 -->
                 <div class="pt-8 border-t border-mique-lavender">
                     <div class="flex items-center justify-between mb-4">
                         <div>
@@ -957,11 +941,11 @@
                         </div>
                     </div>
 
-                    <!-- 🔒 這裡百分之百拿掉反斜線，並且徹底移除最上面的破圖標籤 -->
                     <div id="product-edm-gallery-${p.id}">
                         ${getMiqueOfficialEDM(p.id)}
                     </div>
                 </div>
+            </div>`;
         }
 
         // 🌟 【終極修復核心】：把圖片對照表放在 HTML 外面，安全、乾淨、每款產品都不一樣！
