@@ -952,21 +952,38 @@
                 <div class="pt-8 border-t border-mique-lavender">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【${p.name}】多圖 EDM 宣傳海報藝廊</h3>
+                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【\${p.name}】多圖 EDM 宣傳海報藝廊</h3>
                             <p class="text-xs text-gray-500 mt-0.5">MIQUE 蜜刻官方正品保障與詳細說明</p>
                         </div>
                         <!-- 🔒 上傳與新增按鈕已徹底移除，外人完全無法惡意點擊或編輯 -->
                     </div>
 
-                    <!-- 正式呈現的長版 EDM 海報圖片區塊 (自動轉換空格網址 %20，保證不破圖) -->
-                    <div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4" id="product-edm-gallery-${p.id}">
-                        <img src="第二組MIQUE%204彩.jpg" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="${p.name} EDM">
+                    <!-- 正式呈現的長版 EDM 海報圖片區塊 (根據產品 p.id 自動抓取不同圖片，空格轉換 %20) -->
+                    <div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4" id="product-edm-gallery-\${p.id}">
+                        \${(() => {
+                            // 💡 1. 在這裡設定你五款產品各自對應的 GitHub 圖片名稱列表（有幾張就填幾張）
+                            const edmMapping = {
+                                1: ["第二組MIQUE%204彩.jpg"], // 蜜境保濕前導水
+                                2: ["產品2海報1.jpg", "產品2海報2.jpg"], // 蜜方淨瑕調理凝膠 (請換成你上傳的實際檔名)
+                                3: ["產品3海報.jpg"],
+                                4: ["產品4海報.jpg"],
+                                5: ["產品5海報.jpg"]
+                            };
+                            
+                            const images = edmMapping[p.id] || [];
+                            if (images.length === 0) {
+                                return `<p class="text-center text-xs text-gray-400 py-6">此產品目前尚無批次上傳之 EDM 宣傳圖片</p>`;
+                            }
+                            
+                            // 2. 自動循環渲染出該產品的所有 <img> 標籤
+                            return images.map(imgSrc => `<img src="\${imgSrc}" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="\${p.name} EDM">`).join('');
+                        })()}
                     </div>
                 </div>
             </div>`;
         }
 
-        // 🔒 舊有的上傳按鈕、批次新增與刪除函數已被安全清空，徹底防堵外部編輯，且絕不影響網頁原有的點擊事件
+        // 🔒 舊有的上傳邏輯安全停用，保證不當掉、不卡死首頁點擊事件
         function renderMultiEDMHTML(product) { return ''; }
         function handleMultipleEDMUpload(event, productId) { return; }
         function removeSingleEDM(productId, index) {
