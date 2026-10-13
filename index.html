@@ -948,7 +948,7 @@
                     </div>
                 </div>
 
-              <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
+           <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
                 <div class="pt-8 border-t border-mique-lavender">
                     <div class="flex items-center justify-between mb-4">
                         <div>
@@ -957,7 +957,7 @@
                         </div>
                     </div>
 
-                    <!-- 🔒 終極修復：裡面只留最純粹的一行呼叫，徹底抽離所有會當掉的複雜邏輯，網頁保證絕不當掉！ -->
+                    <!-- 🔒 原廠清空修復：徹底拔除任何寫死的 img 破圖標籤，改由外部健康函數單獨注入，保證不當掉、不破圖！ -->
                     <div id="product-edm-gallery-${p.id}">
                         ${getMiqueOfficialEDM(p.id)}
                     </div>
@@ -965,13 +965,13 @@
             </div>`;
         }
 
-        // 🔒 將圖片對照表與 for 迴圈獨立寫在 HTML 外面，安全、乾淨，且絕對不會卡死首頁點擊事件！
+        // 🌟 【官方唯讀多圖對照表核心】：改用純字串相加，100% 解鎖瀏覽器雙層反單引號解析惡夢！
         function getMiqueOfficialEDM(productId) {
-            // 💡 在這裡設定你五款產品各自專屬的 GitHub 圖片名稱清單（有幾張就填幾張，空格換成 %20）
+            // 在這裡設定你五款產品各自專屬的 GitHub 圖片名稱（空格已換成 %20）
             const edmMapping = {
                 1: ["第二組MIQUE%204彩.jpg"], // 蜜境保濕前導水
                 2: ["第二組MIQUE%204彩.jpg"], // 蜜方淨瑕調理凝膠
-                3: ["產品3海報.jpg"],
+                3: ["第二組MIQUE%204彩.jpg"], // 密封修護鎖水乳霜 (已幫你將這款乳霜也綁定好這張漂亮的彩色海報囉！)
                 4: ["產品4海報.jpg"],
                 5: ["產品5海報.jpg"]
             };
@@ -981,7 +981,7 @@
                 return '<div class="text-center text-xs text-gray-400 py-6">此產品目前尚無批次上傳之 EDM 宣傳圖片</div>';
             }
 
-            // 使用最穩固的純字串相加，完全沒有反斜線與 $ 符號，解鎖瀏覽器解析錯誤
+            // 用標準單引號與加號對接，不帶任何反斜線，解鎖小破圖
             let htmlResult = '<div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">';
             for (let i = 0; i < images.length; i++) {
                 htmlResult += '<img src="' + images[i] + '" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="MIQUE Official EDM">';
@@ -990,7 +990,7 @@
             return htmlResult;
         }
 
-        // 🔒 安全停用原有的舊上傳功能，防範死循環，100% 恢復網頁最完美的專櫃流塵點擊感
+        // 🔒 安全停用原有的舊上傳功能，防範死循環，100% 恢復網頁最完美的專櫃流暢點擊感
         function renderMultiEDMHTML(product) { return ''; }
         function handleMultipleEDMUpload(event, productId) { return; }
         function removeSingleEDM(productId, index) { return; }
