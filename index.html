@@ -983,19 +983,10 @@
             </div>`;
         }
 
-        // 🔒 舊有的上傳邏輯安全停用，保證不當掉、不卡死首頁點擊事件
+       // 🔒 舊有的上傳邏輯安全停用，保證不當掉、不卡死首頁點擊事件
         function renderMultiEDMHTML(product) { return ''; }
         function handleMultipleEDMUpload(event, productId) { return; }
-        function removeSingleEDM(productId, index) {
-            const product = productsData.find(p => p.id === productId);
-            if (product && product.edmImages) {
-                product.edmImages.splice(index, 1);
-                renderIndividualProductPage(productId);
-                renderOverviewGrid();
-                renderSecretSeriesGrid();
-            }
-        }
-
+        function removeSingleEDM(productId, index) { return; }
         function switchCyclePhase(phaseKey) {
             const phase = cycleGuideData[phaseKey];
             if (!phase) return;
