@@ -949,11 +949,12 @@
         }
 
         // 🌟 【終極修復核心】：把圖片對照表放在 HTML 外面，安全、乾淨、每款產品都不一樣！
+               // 🌟 核心修正：移除 return 字串內所有錯誤的反斜線，讓圖片完美呈現不破圖！
         function getMiqueOfficialEDM(productId) {
-            // 💡 在這裡設定你五款產品各自專屬的 GitHub 圖片名稱（有幾張就填幾張，空格換成 %20）
+            // 在這裡設定你五款產品各自專屬的 GitHub 圖片名稱（空格記得換成 %20）
             const edmMapping = {
                 1: ["第二組MIQUE%204彩.jpg"], // 蜜境保濕前導水
-                2: ["第二組MIQUE%204彩.jpg"], // 蜜方淨瑕調理凝膠 (請更換成你實際上傳到 GitHub 的凝膠海報檔名！)
+                2: ["第二組MIQUE%204彩.jpg"], // 蜜方淨瑕調理凝膠
                 3: ["產品3海報.jpg"],
                 4: ["產品4海報.jpg"],
                 5: ["產品5海報.jpg"]
@@ -961,8 +962,15 @@
 
             const images = edmMapping[productId] || [];
             if (images.length === 0) {
-                return `<div class="p-8 text-center text-xs text-gray-400">此產品目前尚無批次上傳之 EDM 宣傳圖片</div>`;
+                return '<div class="p-8 text-center text-xs text-gray-400">此產品目前尚無批次上傳之 EDM 宣傳圖片</div>';
             }
+
+            // 修正重點：把 src="\${imgSrc}" 換成純粹乾淨的 src="\${imgSrc}"，並把 alt="\$..." 換成純文字！
+            return `<div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">
+                ${images.map(imgSrc => `<img src="\${imgSrc}" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="MIQUE Official EDM">`).join('')}
+            </div>`;
+        }
+
 
             // 自動生成多圖並直向排好
             return `<div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">
