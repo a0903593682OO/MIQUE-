@@ -949,7 +949,6 @@
                 </div>
 
               <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
-                <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
                 <div class="pt-8 border-t border-mique-lavender">
                     <div class="flex items-center justify-between mb-4">
                         <div>
@@ -958,19 +957,11 @@
                         </div>
                     </div>
 
-                    <!-- 🌟 移除反斜線修正：讓 JavaScript 能夠精準呼叫圖片對照函數！ -->
+                    <!-- 🔒 這裡百分之百拿掉反斜線，並且徹底移除最上面的破圖標籤 -->
                     <div id="product-edm-gallery-${p.id}">
                         ${getMiqueOfficialEDM(p.id)}
                     </div>
                 </div>
-
-
-                    <!-- 🔒 改成由外面乾淨的函數自動渲染，裡面完全不寫複雜程式碼，網頁保證絕不當掉！ -->
-                    <div id="product-edm-gallery-\${p.id}">
-                        \${getMiqueOfficialEDM(p.id)}
-                    </div>
-                </div>
-            </div>`;
         }
 
         // 🌟 【終極修復核心】：把圖片對照表放在 HTML 外面，安全、乾淨、每款產品都不一樣！
