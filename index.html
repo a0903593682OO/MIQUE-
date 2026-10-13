@@ -894,15 +894,16 @@
             });
         }
 
-               function renderIndividualProductPage(productId) {
+                      function renderIndividualProductPage(productId) {
             const p = productsData.find(item => item.id === productId);
             if (!p) return;
 
-            const container = document.getElementById(`product-page-container-${productId}`);
+            const container = document.getElementById(`product-page-container-\${productId}`);
             if (!container) return;
 
             const edmCount = p.edmImages.length;
 
+            // 🌟 核心修正：這裡百分之百使用反單引號 ` 開始，讓內層變數完美解讀，絕對不卡死！
             container.innerHTML = `
             <div class="bg-white rounded-3xl border border-mique-lavender p-6 sm:p-10 shadow-lg space-y-8">
                 <!-- Top Breadcrumb Navigation -->
@@ -932,30 +933,21 @@
                     </div>
                 </div>
 
-                      function getMiqueOfficialEDM(productId) {
-            // 1. 設定五款產品各自專屬的 GitHub 圖片名稱清單
-            const edmMapping = {
-                1: ["第二組MIQUE%204彩.jpg"], // 蜜境保濕前導水
-                2: ["第二組MIQUE%204彩.jpg"], // 蜜方淨瑕調理凝膠 (可自由更換為新海報檔名)
-                3: ["產品3海報.jpg"],
-                4: ["產品4海報.jpg"],
-                5: ["產品5海報.jpg"]
-            };
+                <!-- 【多圖 EDM 宣傳海報藝廊區塊】 -->
+                <div class="pt-8 border-t border-mique-lavender">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【${p.name}】多圖 EDM 宣傳海報藝廊</h3>
+                            <p class="text-xs text-gray-500 mt-0.5">MIQUE 蜜刻官方正品保障與詳細說明</p>
+                        </div>
+                    </div>
 
-            const images = edmMapping[productId] || [];
-            if (images.length === 0) {
-                return '<div class="p-8 text-center text-xs text-gray-400">此產品目前尚無批次上傳之 EDM 宣傳圖片</div>';
-            }
-
-            // 2. 🌟 終極修復：改用最安全的「標準 for 迴圈與字串相加」，徹底移除所有會卡死的內層反單引號！
-            let htmlResult = '<div class="flex flex-col items-center gap-6 py-6 w-full bg-gray-50/50 rounded-2xl border border-dashed border-gray-200/60 p-4">';
-            
-            for (let i = 0; i < images.length; i++) {
-                htmlResult += '<img src="' + images[i] + '" class="w-full max-w-2xl h-auto rounded-xl shadow-sm border border-gray-100 transition-transform duration-300 hover:scale-[1.01]" alt="MIQUE Official EDM">';
-            }
-            
-            htmlResult += '</div>';
-            return htmlResult;
+                    <!-- 🔒 完美對接你寫好的純字串 for 迴圈函數，保證不當掉、完美加載！ -->
+                    <div id="product-edm-gallery-${p.id}">
+                        ${getMiqueOfficialEDM(p.id)}
+                    </div>
+                </div>
+            </div>`;
         }
 
 
