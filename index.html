@@ -894,16 +894,16 @@
             });
         }
 
-                      function renderIndividualProductPage(productId) {
+                              function renderIndividualProductPage(productId) {
             const p = productsData.find(item => item.id === productId);
             if (!p) return;
 
-            const container = document.getElementById(`product-page-container-\${productId}`);
+            // 🌟 關鍵修正：徹底移除對齊時多跑出來的反斜線 \ ，讓網頁大結構一秒解鎖！
+            const container = document.getElementById(`product-page-container-${productId}`);
             if (!container) return;
 
-            const edmCount = p.edmImages.length;
+            const edmCount = p.edmImages ? p.edmImages.length : 0;
 
-            // 🌟 核心修正：這裡百分之百使用反單引號 ` 開始，讓內層變數完美解讀，絕對不卡死！
             container.innerHTML = `
             <div class="bg-white rounded-3xl border border-mique-lavender p-6 sm:p-10 shadow-lg space-y-8">
                 <!-- Top Breadcrumb Navigation -->
@@ -918,14 +918,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     <div class="bg-mique-lavender/40 rounded-3xl p-8 text-center border border-mique-lavender">
                         ${generateProductSVG(p.svgType)}
-                        <span class="inline-block mt-4 text-xs font-bold text-mique-gold-dark bg-white px-3 py-1 rounded-full shadow-sm">${p.tag}</span>
+                        <span class="inline-block mt-4 text-xs font-bold text-mique-gold-dark bg-white px-3 py-1 rounded-full shadow-sm">${p.tag || ''}</span>
                     </div>
 
                     <div class="space-y-4">
                         <h1 class="text-3xl font-bold font-serif-custom text-mique-purple">${p.name}</h1>
-                        <p class="text-sm text-gray-600 leading-relaxed">${p.desc}</p>
+                        <p class="text-sm text-gray-600 leading-relaxed">${p.desc || ''}</p>
                         <div class="border-t pt-4 flex justify-between items-center">
-                            <span class="text-xl font-bold text-mique-purple">$${p.price} <span class="text-xs text-gray-400 font-normal">/ ${p.volume}</span></span>
+                            <span class="text-xl font-bold text-mique-purple">$${p.price} <span class="text-xs text-gray-400 font-normal">/ ${p.volume || ''}</span></span>
                             <button onclick="addToCart(${p.id})" class="px-6 py-2.5 bg-mique-purple text-white font-bold rounded-xl shadow-md hover:bg-mique-gold hover:text-mique-purple transition">
                                 <i class="fa-solid fa-cart-plus mr-1"></i> 加入購物車
                             </button>
@@ -942,13 +942,13 @@
                         </div>
                     </div>
 
-                    <!-- 🔒 完美對接你寫好的純字串 for 迴圈函數，保證不當掉、完美加載！ -->
                     <div id="product-edm-gallery-${p.id}">
                         ${getMiqueOfficialEDM(p.id)}
                     </div>
                 </div>
             </div>`;
         }
+
 
 
         // 🔒 停用舊的重複功能，確保購物車加減與首頁點擊順暢
