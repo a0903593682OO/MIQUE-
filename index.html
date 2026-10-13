@@ -864,97 +864,71 @@
             }
         }
 
-        function createProductCardHTML(p) {
-            const edmCount = p.edmImages ? p.edmImages.length : 0;
-            return `
-            <div class="bg-white rounded-3xl p-6 border border-mique-lavender shadow-sm flex flex-col justify-between group hover:shadow-md transition">
-                <div>
-                    <div class="bg-mique-lavender/40 rounded-2xl p-4 text-center mb-4 group-hover:scale-105 transition-transform">
-                        ${generateProductSVG(p.svgType)}
+         function renderMultiEDMHTML(product) {
+            if (product.edmImages && product.edmImages.length > 0) {
+                return `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between text-xs text-gray-500 border-b pb-2">
+                        <span>已載入 <strong>${product.edmImages.length}</strong> 張 EDM 圖檔</span>
                     </div>
-                    <span class="text-xs font-bold text-mique-gold-dark bg-mique-lavender px-2.5 py-0.5 rounded-full">${p.tag}</span>
-                    <h3 class="font-serif-custom font-bold text-lg text-mique-purple mt-2 cursor-pointer hover:text-mique-gold" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
-                    <p class="text-xs text-gray-500 mt-1 line-clamp-2">${p.desc}</p>
-                </div>
-                <div class="mt-6 pt-3 border-t border-gray-100 flex items-center justify-between">
+                    <div class="space-y-4 p-2 bg-gray-50 rounded-2xl border">
+                        ${product.edmImages.map((imgSrc, idx) => `
+                        <div class="relative group rounded-xl overflow-hidden border shadow-sm">
+                            <span class="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full z-10">EDM Slide #${idx + 1}</span>
+                            <button onclick="removeSingleEDM(${product.id}, ${idx})" class="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs opacity-0 group-hover:opacity-100 transition z-10">×</button>
+                            <img src="${imgSrc}" class="w-full h-auto object-cover">
+                        </div>`).join('')}
+                    </div>
+                </div>`;
+            } else {
+                return `
+                <div class="edm-dashed-box p-8 rounded-3xl text-center space-y-4">
+                    <i class="fa-solid fa-images text-3xl text-mique-gold"></i>
                     <div>
-                        <span class="text-lg font-bold text-mique-purple font-serif-custom">$${p.price}</span>
-                        <span class="text-[10px] text-gray-400 block">${p.volume}</span>
+                        <h4 class="font-bold text-base text-mique-purple">此產品目前尚無批次上傳之 EDM 宣傳圖片</h4>
+                        <p class="text-xs text-gray-500 mt-1">您可以點擊下方按鈕，上傳一份或多份圖片檔以呈現長頁面視覺設計</p>
                     </div>
-                    <button onclick="navigateTo('product-${p.id}')" class="px-3.5 py-1.5 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition">
-                        詳情與多圖 EDM (${edmCount})
-                    </button>
-                </div>
-            </div>`;
+                    <label class="inline-flex items-center gap-2 cursor-pointer bg-mique-purple text-white px-6 py-2.5 rounded-full text-xs font-bold shadow hover:bg-mique-gold hover:text-mique-purple transition">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>選擇多張 EDM 宣傳圖片</span>
+                        <input type="file" multiple accept="image/*" class="hidden" onchange="handleMultipleEDMUpload(event, ${product.id})">
+                    </label>
+                </div>`;
+            }
         }
 
-        function renderAllProductPages() {
-            productsData.forEach(p => {
-                renderIndividualProductPage(p.id);
+        function handleMultipleEDMUpload(event, productId) {
+            const files = Array.from(event.target.files);
+            if (!files || files.length === 0) return;
+
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+
+            let loadedCount = 0;
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    product.edmImages.push(e.target.result);
+                    loadedCount++;
+                    if (loadedCount === files.length) {
+                        renderIndividualProductPage(productId);
+                        renderOverviewGrid();
+                        renderSecretSeriesGrid();
+                    }
+                };
+                reader.readAsDataURL(file);
             });
         }
 
-                              function renderIndividualProductPage(productId) {
-            const p = productsData.find(item => item.id === productId);
-            if (!p) return;
-
-            // 🌟 關鍵修正：徹底移除對齊時多跑出來的反斜線 \ ，讓網頁大結構一秒解鎖！
-            const container = document.getElementById(`product-page-container-${productId}`);
-            if (!container) return;
-
-            const edmCount = p.edmImages ? p.edmImages.length : 0;
-
-            container.innerHTML = `
-            <div class="bg-white rounded-3xl border border-mique-lavender p-6 sm:p-10 shadow-lg space-y-8">
-                <!-- Top Breadcrumb Navigation -->
-                <div class="flex items-center gap-2 text-xs text-gray-500 border-b pb-4">
-                    <a href="#products-overview" onclick="navigateTo('products-overview')" class="hover:text-mique-purple">全系列產品總覽</a>
-                    <span>/</span>
-                    <a href="#products-secret" onclick="navigateTo('products-secret')" class="hover:text-mique-purple">秘蜜保養系列</a>
-                    <span>/</span>
-                    <span class="text-mique-purple font-bold">${p.name}</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                    <div class="bg-mique-lavender/40 rounded-3xl p-8 text-center border border-mique-lavender">
-                        ${generateProductSVG(p.svgType)}
-                        <span class="inline-block mt-4 text-xs font-bold text-mique-gold-dark bg-white px-3 py-1 rounded-full shadow-sm">${p.tag || ''}</span>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h1 class="text-3xl font-bold font-serif-custom text-mique-purple">${p.name}</h1>
-                        <p class="text-sm text-gray-600 leading-relaxed">${p.desc || ''}</p>
-                        <div class="border-t pt-4 flex justify-between items-center">
-                            <span class="text-xl font-bold text-mique-purple">$${p.price} <span class="text-xs text-gray-400 font-normal">/ ${p.volume || ''}</span></span>
-                            <button onclick="addToCart(${p.id})" class="px-6 py-2.5 bg-mique-purple text-white font-bold rounded-xl shadow-md hover:bg-mique-gold hover:text-mique-purple transition">
-                                <i class="fa-solid fa-cart-plus mr-1"></i> 加入購物車
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 【多圖 EDM 宣傳海報藝廊區塊】 -->
-                <div class="pt-8 border-t border-mique-lavender">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【${p.name}】多圖 EDM 宣傳海報藝廊</h3>
-                            <p class="text-xs text-gray-500 mt-0.5">MIQUE 蜜刻官方正品保障與詳細說明</p>
-                        </div>
-                    </div>
-
-                    <div id="product-edm-gallery-${p.id}">
-                        ${getMiqueOfficialEDM(p.id)}
-                    </div>
-                </div>
-            </div>`;
+        function removeSingleEDM(productId, index) {
+            const product = productsData.find(p => p.id === productId);
+            if (product && product.edmImages) {
+                product.edmImages.splice(index, 1);
+                renderIndividualProductPage(productId);
+                renderOverviewGrid();
+                renderSecretSeriesGrid();
+            }
         }
-
-
-
-        // 🔒 停用舊的重複功能，確保購物車加減與首頁點擊順暢
-        function renderMultiEDMHTML(product) { return ''; }
-        function handleMultipleEDMUpload(event, productId) { return; }
-        function removeSingleEDM(productId, index) { return; }
 
         function switchCyclePhase(phaseKey) {
             const phase = cycleGuideData[phaseKey];
