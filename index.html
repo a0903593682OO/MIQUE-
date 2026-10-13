@@ -864,7 +864,111 @@
             }
         }
 
-         function renderMultiEDMHTML(product) {
+        function createProductCardHTML(p) {
+            const edmCount = p.edmImages ? p.edmImages.length : 0;
+            return `
+            <div class="bg-white rounded-3xl p-6 border border-mique-lavender shadow-sm flex flex-col justify-between group hover:shadow-md transition">
+                <div>
+                    <div class="bg-mique-lavender/40 rounded-2xl p-4 text-center mb-4 group-hover:scale-105 transition-transform">
+                        ${generateProductSVG(p.svgType)}
+                    </div>
+                    <span class="text-xs font-bold text-mique-gold-dark bg-mique-lavender px-2.5 py-0.5 rounded-full">${p.tag}</span>
+                    <h3 class="font-serif-custom font-bold text-lg text-mique-purple mt-2 cursor-pointer hover:text-mique-gold" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
+                    <p class="text-xs text-gray-500 mt-1 line-clamp-2">${p.desc}</p>
+                </div>
+                <div class="mt-6 pt-3 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-lg font-bold text-mique-purple font-serif-custom">$${p.price}</span>
+                        <span class="text-[10px] text-gray-400 block">${p.volume}</span>
+                    </div>
+                    <button onclick="navigateTo('product-${p.id}')" class="px-3.5 py-1.5 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition">
+                        詳情與多圖 EDM (${edmCount})
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        function renderAllProductPages() {
+            productsData.forEach(p => {
+                renderIndividualProductPage(p.id);
+            });
+        }
+
+        function renderIndividualProductPage(productId) {
+            const p = productsData.find(item => item.id === productId);
+            if (!p) return;
+
+            const container = document.getElementById(`product-page-container-${productId}`);
+            if (!container) return;
+
+            const edmCount = p.edmImages.length;
+
+            container.innerHTML = `
+            <div class="bg-white rounded-3xl border border-mique-lavender p-6 sm:p-10 shadow-lg space-y-8">
+                <!-- Top Breadcrumb Navigation -->
+                <div class="flex items-center gap-2 text-xs text-gray-500 border-b pb-4">
+                    <a href="#products-overview" onclick="navigateTo('products-overview')" class="hover:text-mique-purple">全系列產品總覽</a>
+                    <span>/</span>
+                    <a href="#products-secret" onclick="navigateTo('products-secret')" class="hover:text-mique-purple">秘蜜保養系列</a>
+                    <span>/</span>
+                    <span class="text-mique-purple font-bold">${p.name}</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    <div class="bg-mique-lavender/40 rounded-3xl p-8 text-center border border-mique-lavender">
+                        ${generateProductSVG(p.svgType)}
+                        <span class="inline-block mt-4 text-xs font-bold text-mique-gold-dark bg-white px-3 py-1 rounded-full shadow-sm">${p.tag} ｜ ${p.volume}</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h1 class="text-3xl font-bold font-serif-custom text-mique-purple">${p.name}</h1>
+                        <p class="text-sm text-gray-600 leading-relaxed">${p.desc}</p>
+
+                        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                            <span class="text-xs font-bold text-mique-purple block"><i class="fa-solid fa-leaf text-mique-gold mr-1"></i> 核心亮點成分：</span>
+                            <div class="flex flex-wrap gap-2">
+                                ${p.ingredients.map(ing => `<span class="bg-white text-gray-700 text-[11px] px-2.5 py-1 rounded-lg border">${ing}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                            <span class="text-xs font-bold text-mique-purple block"><i class="fa-solid fa-hand-holding-droplet text-mique-gold mr-1"></i> 建議使用步驟：</span>
+                            <p class="text-xs text-gray-600">${p.usageSteps}</p>
+                        </div>
+
+                        <div class="pt-4 flex items-center justify-between">
+                            <div>
+                                <span class="text-3xl font-bold text-mique-purple font-serif-custom">$${p.price}</span>
+                                <span class="text-xs text-gray-400 block">${p.volume} 尊榮瓶裝</span>
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="px-8 py-3.5 rounded-full bg-mique-purple text-white font-bold text-xs hover:bg-mique-gold hover:text-mique-purple transition shadow-md">
+                                <i class="fa-solid fa-bag-shopping mr-2"></i> 加入購物車
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MULTI-IMAGE EDM GALLERY SECTION FOR THIS PRODUCT -->
+                <div class="pt-8 border-t border-mique-lavender">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-mique-purple font-serif-custom"><i class="fa-solid fa-images text-mique-gold mr-2"></i>【${p.name}】多圖 EDM 宣傳海報藝廊</h3>
+                            <p class="text-xs text-gray-500 mt-0.5">可一次選擇並批次上傳多張 EDM 圖片展示長版海報</p>
+                        </div>
+                        <label class="cursor-pointer bg-mique-lavender text-mique-purple px-4 py-2 rounded-full text-xs font-bold hover:bg-mique-purple hover:text-white transition">
+                            <i class="fa-solid fa-cloud-arrow-up mr-1"></i> 批次新增 EDM 圖片
+                            <input type="file" multiple accept="image/*" class="hidden" onchange="handleMultipleEDMUpload(event, ${p.id})">
+                        </label>
+                    </div>
+
+                    <div id="product-edm-gallery-${p.id}">
+                        ${renderMultiEDMHTML(p)}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function renderMultiEDMHTML(product) {
             if (product.edmImages && product.edmImages.length > 0) {
                 return `
                 <div class="space-y-4">
@@ -993,6 +1097,7 @@
                 </div>
             </div>`;
         }
+
         // LUCKY WHEEL LOGIC (RESTRICTED TO ONE SPIN)
         const prizes = [
             { name: "專屬折價券 $100", code: "MIQUE100" },
