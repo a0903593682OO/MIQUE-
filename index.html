@@ -486,23 +486,29 @@
             </div>
         </section>
 
-        <!-- ==================== SECRET SKINCARE SERIES (🔒 REPLACED & MOVED SCROLL VERSION) ==================== -->
-<!-- 🌟 完美大挪移取代：最上面大框已消失，直接在最下方入駐這台完全成功、高質感的絲滑左右滾動列車！ -->
-<div id="page-products-secret" class="w-full py-16 border-t border-mique-lavender flex flex-col items-center justify-center text-center">
-    <div class="text-center mb-8">
-        <span class="text-xs font-bold text-white bg-mique-purple px-4 py-1.5 rounded-full tracking-wider uppercase shadow-sm">Secret Skincare Series</span>
-        <h2 class="text-2xl font-bold font-serif-custom text-mique-purple mt-3">MIQUE 蜜刻 ｜ 秘蜜保養全系列</h2>
-        <p class="text-xs text-gray-500 mt-1">左右絲滑滑動 ｜ 探索最適合您生理週期的專屬祕蜜時刻</p>
-    </div>
-    
-    <!-- 💡 將原本的 id 改回對接底層 JavaScript 的 secret-series-grid 標章，讓卡片完美渲染成中文！ -->
-    <div class="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth w-full px-4 justify-start items-stretch" 
-         id="secret-series-grid" 
-         style="scrollbar-width: none; -ms-overflow-style: none; display: flex; float: none; margin: 0 auto; max-width: 1024px;">
-         <!-- 完美的 5 款專櫃白色玻璃水滴卡片會百分之百流暢地動態出現在最底下這裡 -->
-    </div>
-</div>
+        <<!-- 3B: 秘蜜保養系列 主頁 (Secret Series Page View) -->
+        <section id="page-products-secret" class="page-view">
+            <div class="bg-gradient-to-r from-mique-purple via-mique-purple-dark to-mique-purple text-white py-12 text-center">
+                <span class="text-mique-gold-light text-xs font-bold tracking-widest uppercase">Secret Skincare Collection</span>
+                <h1 class="text-3xl font-bold font-serif-custom mt-1">秘蜜保養系列 (Secret Series)</h1>
+                <p class="text-gray-200 text-sm mt-2">延伸 5 大頂級單品 ｜ 點擊可閱讀獨立產品介紹與多圖 EDM 海報</p>
+            </div>
 
+            <!-- Sub Navigation Tabs for the 5 Products -->
+            <div class="bg-white border-b border-mique-lavender sticky top-20 z-30 shadow-sm">
+                <div class="max-w-7xl mx-auto px-4 flex items-center justify-start sm:justify-center space-x-2 sm:space-x-4 overflow-x-auto py-3 text-xs font-bold">
+                    <a href="#product-1" onclick="navigateTo('product-1')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">1. 蜜境保濕前導水</a>
+                    <a href="#product-2" onclick="navigateTo('product-2')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">2. 蜜萃光感亮膚精華</a>
+                    <a href="#product-3" onclick="navigateTo('product-3')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">3. 蜜封修護鎖水乳霜</a>
+                    <a href="#product-4" onclick="navigateTo('product-4')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">4. 蜜方淨瑕調理凝膠</a>
+                    <a href="#product-5" onclick="navigateTo('product-5')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">5. 蜜護私密淨膚慕絲</a>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 py-16">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="secret-series-grid"></div>
+            </div>
+        </section>
 
             <!-- Sub Navigation Tabs for the 5 Products -->
             <div class="bg-white border-b border-mique-lavender sticky top-20 z-30 shadow-sm">
@@ -873,35 +879,26 @@
             }
         }
 
-                // 🌟 【全站卡片外觀大導正】：完美將右上角的高級「白色玻璃水滴卡片」結構取代並鎖死在這裡！
-               // 🌟 終極取代：用圖一完全成功的「無反斜線、橫向按鈕」結構，百分之百蓋掉圖二的亂碼！
+              
         function createProductCardHTML(p) {
+            const edmCount = p.edmImages ? p.edmImages.length : 0;
             return `
-            <div class="w-full max-w-[320px] mx-auto bg-white p-6 rounded-3xl border border-mique-lavender shadow-md flex flex-col justify-between hover:shadow-lg transition duration-300 group">
+            <div class="bg-white rounded-3xl p-6 border border-mique-lavender shadow-sm flex flex-col justify-between group hover:shadow-md transition">
                 <div>
-                    <!-- 頂部產品示意圖 (與圖一完全相同的白色圓圈 + 動態水滴) -->
-                    <div class="bg-mique-lavender/40 rounded-2xl p-6 text-center mb-4 relative overflow-hidden">
-                        <div class="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center border shadow-inner">
-                            <i class="fa-solid fa-droplet text-mique-purple text-2xl animate-pulse"></i>
-                        </div>
-                        <span class="absolute top-2 right-2 text-[10px] font-bold text-mique-gold-dark bg-white px-2 py-0.5 rounded-full shadow-sm">${p.tag}</span>
+                    <div class="bg-mique-lavender/40 rounded-2xl p-4 text-center mb-4 group-hover:scale-105 transition-transform">
+                        ${generateProductSVG(p.svgType)}
                     </div>
-                    
-                    <!-- 產品名稱與描述 (徹底移除反斜線，解鎖正常中文名稱) -->
-                    <div class="text-center space-y-1">
-                        <h3 class="font-serif-custom font-bold text-lg text-mique-purple cursor-pointer group-hover:text-mique-gold" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
-                        <p class="text-xs text-gray-500 line-clamp-2 mt-1">${p.desc}</p>
-                    </div>
+                    <span class="text-xs font-bold text-mique-gold-dark bg-mique-lavender px-2.5 py-0.5 rounded-full">${p.tag}</span>
+                    <h3 class="font-serif-custom font-bold text-lg text-mique-purple mt-2 cursor-pointer hover:text-mique-gold" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
+                    <p class="text-xs text-gray-500 mt-1 line-clamp-2">${p.desc}</p>
                 </div>
-
-                <!-- 底部價格與全新統一、橫向排好絕不偏歪的「查看產品頁 ➔」按鈕 -->
-                <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="mt-6 pt-3 border-t border-gray-100 flex items-center justify-between">
                     <div>
                         <span class="text-lg font-bold text-mique-purple font-serif-custom">$${p.price}</span>
-                        <span class="text-[10px] text-gray-400 block">${p.volume || '尊榮裝'}</span>
+                        <span class="text-[10px] text-gray-400 block">${p.volume}</span>
                     </div>
-                    <button onclick="navigateTo('product-${p.id}')" class="px-4 py-2 rounded-xl bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition duration-300 shadow-sm flex items-center gap-1 flex-shrink-0">
-                        查看產品頁 ➔
+                    <button onclick="navigateTo('product-${p.id}')" class="px-3.5 py-1.5 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition">
+                        詳情與多圖 EDM (${edmCount})
                     </button>
                 </div>
             </div>`;
