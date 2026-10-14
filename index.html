@@ -872,29 +872,39 @@
             }
         }
 
+                // 🌟 【全站卡片外觀大導正】：完美將右上角的高級「白色玻璃水滴卡片」結構取代並鎖死在這裡！
         function createProductCardHTML(p) {
-            const edmCount = p.edmImages ? p.edmImages.length : 0;
             return `
-            <div class="bg-white rounded-3xl p-6 border border-mique-lavender shadow-sm flex flex-col justify-between group hover:shadow-md transition">
+            <div class="w-full max-w-[320px] mx-auto bg-white p-6 rounded-3xl border border-mique-lavender shadow-md flex flex-col justify-between hover:shadow-lg transition duration-300 group">
                 <div>
-                    <div class="bg-mique-lavender/40 rounded-2xl p-4 text-center mb-4 group-hover:scale-105 transition-transform">
-                        ${generateProductSVG(p.svgType)}
+                    <!-- 頂部產品示意圖 (原廠無暇白色圓圈 + 動態小水滴) -->
+                    <div class="bg-mique-lavender/40 rounded-2xl p-6 text-center mb-4 relative overflow-hidden">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center border shadow-inner">
+                            <i class="fa-solid fa-droplet text-mique-purple text-2xl animate-pulse"></i>
+                        </div>
+                        <span class="absolute top-2 right-2 text-[10px] font-bold text-mique-gold-dark bg-white px-2 py-0.5 rounded-full shadow-sm">\${p.tag}</span>
                     </div>
-                    <span class="text-xs font-bold text-mique-gold-dark bg-mique-lavender px-2.5 py-0.5 rounded-full">${p.tag}</span>
-                    <h3 class="font-serif-custom font-bold text-lg text-mique-purple mt-2 cursor-pointer hover:text-mique-gold" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
-                    <p class="text-xs text-gray-500 mt-1 line-clamp-2">${p.desc}</p>
+                    
+                    <!-- 產品名稱與描述 -->
+                    <div class="text-center space-y-1">
+                        <h3 class="font-serif-custom font-bold text-lg text-mique-purple cursor-pointer group-hover:text-mique-gold" onclick="navigateTo('product-\${p.id}')">\${p.name}</h3>
+                        <p class="text-xs text-gray-500 line-clamp-2 mt-1">\${p.desc}</p>
+                    </div>
                 </div>
-                <div class="mt-6 pt-3 border-t border-gray-100 flex items-center justify-between">
+
+                <!-- 底部價格與全新統一的「查看產品頁 ➔」按鈕 -->
+                <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
                     <div>
-                        <span class="text-lg font-bold text-mique-purple font-serif-custom">$${p.price}</span>
-                        <span class="text-[10px] text-gray-400 block">${p.volume}</span>
+                        <span class="text-lg font-bold text-mique-purple font-serif-custom">\$\${p.price}</span>
+                        <span class="text-[10px] text-gray-400 block">\${p.volume || '尊榮裝'}</span>
                     </div>
-                    <button onclick="navigateTo('product-${p.id}')" class="px-3.5 py-1.5 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition">
-                        詳情 EDM (${edmCount})
+                    <button onclick="navigateTo('product-\${p.id}')" class="px-4 py-2 rounded-xl bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition duration-300 shadow-sm flex items-center gap-1">
+                        查看產品頁 ➔
                     </button>
                 </div>
             </div>`;
         }
+
 
         function renderAllProductPages() {
             productsData.forEach(p => {
