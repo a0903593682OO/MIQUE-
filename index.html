@@ -498,11 +498,19 @@
                 </div>
             </div>
 
-            <!-- 🌟 終極修正：大框收緊至黃金寬度 max-w-5xl，並加上雙重置中，卡片保證絕對在正中央！ -->
-<div class="max-w-5xl mx-auto px-4 py-16 flex flex-col items-center justify-center">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full justify-items-center justify-center" id="secret-series-grid"></div>
+          <!-- ==================== SECRET SKINCARE SERIES (🔒 100% PERFECT CENTERED VERSION) ==================== -->
+<!-- 1. 最外層大外框：強制宣告全區塊不論手機、電腦，內容物百分之百向正中央靠攏對齊！ -->
+<div class="w-full py-16 flex flex-col items-center justify-center text-center">
+    
+    <!-- 2. 卡片黃金寬度限制容器：加入 mx-auto 與 items-center，把三張卡片死死鎖在螢幕正中間 -->
+    <div class="w-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full justify-items-center justify-center" id="secret-series-grid">
+            <!-- 產品卡片會由 JavaScript 自動完美居中生成在這裡 -->
+        </div>
+    </div>
+    
+</div>
 
-            </div>
         </section>
 
         <!-- 3C: INDIVIDUAL PRODUCT SUB-PAGES (#product-1 ~ #product-5) -->
