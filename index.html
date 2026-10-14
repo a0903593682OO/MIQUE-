@@ -214,15 +214,18 @@
                         </div>
                     </div>
                     
-                    <!-- ==================== STAR PRODUCTS SCROLL SECTION ==================== -->
-<div class="w-full py-12 px-4 max-w-5xl mx-auto">
-    <div class="text-center mb-8">
-        <span class="text-xs font-bold text-white bg-mique-purple px-4 py-1.5 rounded-full tracking-wider uppercase shadow-sm">Star Products</span>
-        <h2 class="text-2xl font-bold font-serif-custom text-mique-purple mt-3">MIQUE 蜜刻 ｜ 明星保養系列</h2>
-        <p class="text-xs text-gray-500 mt-1">左右滑動探索最適合您當下肌膚狀態的秘密時刻</p>
-    </div>
-
-  <h3 class="font-serif-custom font-bold text-lg text-mique-purple">蜜萃光感亮膚精華</h3>
+                    <div class="relative flex justify-center items-center">
+                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-3xl shadow-2xl relative max-w-sm w-full">
+                            <div class="relative rounded-2xl overflow-hidden bg-gradient-to-b from-mique-lavender to-white p-6 text-center">
+                                <span class="bg-mique-purple text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full mb-3 inline-block">Star Product</span>
+                                <div class="w-40 h-48 mx-auto my-3 flex items-center justify-center">
+                                    <svg viewBox="0 0 100 140" class="w-24 h-32 mx-auto filter drop-shadow">
+                                        <rect x="30" y="30" width="40" height="90" rx="8" fill="#F4EFF8"/>
+                                        <rect x="38" y="10" width="24" height="20" rx="2" fill="#D4AF37"/>
+                                        <text x="50" y="70" font-size="7" font-weight="bold" fill="#735E8A" text-anchor="middle">MIQUE</text>
+                                    </svg>
+                                </div>
+                                <h3 class="font-serif-custom font-bold text-lg text-mique-purple">蜜萃光感亮膚精華</h3>
                                 <p class="text-xs text-gray-500 mt-1">極致鎖水亮白 ｜ 蜂萃與維生素B5</p>
                                 <div class="mt-4 flex justify-between items-center px-2">
                                     <span class="text-mique-gold-dark font-bold text-lg">$899</span>
@@ -233,8 +236,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div class="text-center max-w-2xl mx-auto mb-12">
@@ -486,7 +487,7 @@
             </div>
         </section>
 
-        <<!-- 3B: 秘蜜保養系列 主頁 (Secret Series Page View) -->
+        <!-- 3B: 秘蜜保養系列 主頁 (Secret Series Page View) -->
         <section id="page-products-secret" class="page-view">
             <div class="bg-gradient-to-r from-mique-purple via-mique-purple-dark to-mique-purple text-white py-12 text-center">
                 <span class="text-mique-gold-light text-xs font-bold tracking-widest uppercase">Secret Skincare Collection</span>
@@ -506,22 +507,6 @@
             </div>
 
             <div class="max-w-7xl mx-auto px-4 py-16">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="secret-series-grid"></div>
-            </div>
-        </section>
-
-            <!-- Sub Navigation Tabs for the 5 Products -->
-            <div class="bg-white border-b border-mique-lavender sticky top-20 z-30 shadow-sm">
-                <div class="max-w-7xl mx-auto px-4 flex items-center justify-start sm:justify-center space-x-2 sm:space-x-4 overflow-x-auto py-3 text-xs font-bold">
-                    <a href="#product-1" onclick="navigateTo('product-1')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">1. 蜜境保濕前導水</a>
-                    <a href="#product-2" onclick="navigateTo('product-2')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">2. 蜜萃光感亮膚精華</a>
-                    <a href="#product-3" onclick="navigateTo('product-3')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">3. 蜜封修護鎖水乳霜</a>
-                    <a href="#product-4" onclick="navigateTo('product-4')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">4. 蜜方淨瑕調理凝膠</a>
-                    <a href="#product-5" onclick="navigateTo('product-5')" class="px-4 py-2 rounded-full bg-mique-lavender text-mique-purple hover:bg-mique-purple hover:text-white transition whitespace-nowrap">5. 蜜護私密淨膚慕絲</a>
-                </div>
-            </div>
-
-<!-<div class="max-w-7xl mx-auto px-4 py-16">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="secret-series-grid"></div>
             </div>
         </section>
@@ -879,7 +864,6 @@
             }
         }
 
-              
         function createProductCardHTML(p) {
             const edmCount = p.edmImages ? p.edmImages.length : 0;
             return `
@@ -898,12 +882,11 @@
                         <span class="text-[10px] text-gray-400 block">${p.volume}</span>
                     </div>
                     <button onclick="navigateTo('product-${p.id}')" class="px-3.5 py-1.5 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition">
-                        詳情與多圖 EDM (${edmCount})
+                        詳情 EDM (${edmCount})
                     </button>
                 </div>
             </div>`;
         }
-
 
         function renderAllProductPages() {
             productsData.forEach(p => {
@@ -1275,7 +1258,6 @@ function checkoutCart() {
     toggleCartDrawer();
 }
 
-      
     </script>
 </body>
 </html>
