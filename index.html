@@ -1251,6 +1251,7 @@ function checkoutCart() {
 }
 
         // 核心功能：自動抓取 productsData 裡的五款商品，並塞入滾動卡片中
+// 🌟 終極修復核心：徹底拔除所有反斜線與 alternate 髒字，解鎖首頁 5 商品絲滑滾動！
 function renderStarProductsScroll() {
     const scrollContainer = document.getElementById('star-products-scroll-container');
     if (!scrollContainer || typeof productsData === 'undefined') return;
@@ -1265,20 +1266,20 @@ function renderStarProductsScroll() {
                     <div class="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center border shadow-inner">
                         <i class="fa-solid fa-droplet text-mique-purple text-3xl animate-pulse"></i>
                     </div>
-                    <span class="absolute top-2 right-2 text-[10px] font-bold text-mique-gold-dark bg-white px-2 py-0.5 rounded-full shadow-sm">\${p.tag}</span>
+                    <span class="absolute top-2 right-2 text-[10px] font-bold text-mique-gold-dark bg-white px-2 py-0.5 rounded-full shadow-sm">${p.tag}</span>
                 </div>
                 
                 <!-- 產品文案名稱 -->
                 <div class="text-center space-y-1">
-                    <h3 class="font-serif-custom font-bold text-base text-mique-purple cursor-pointer hover:text-mique-gold" onclick="navigateTo('product-\alternate\${p.id}')">\${p.name}</h3>
-                    <p class="text-[11px] text-gray-500 truncate">\${p.desc || '極致鎖水亮白 ｜ 日常專屬調理'}</p>
+                    <h3 class="font-serif-custom font-bold text-base text-mique-purple cursor-pointer hover:text-mique-gold" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
+                    <p class="text-[11px] text-gray-500 truncate">${p.desc || '極致鎖水亮白 ｜ 日常專屬調理'}</p>
                 </div>
             </div>
 
             <!-- 底部價格與查看詳情按鈕 -->
             <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
-                <span class="text-lg font-bold text-mique-gold-dark font-serif-custom">\$\${p.price}</span>
-                <button onclick="navigateTo('product-\${p.id}')" class="px-4 py-2 rounded-xl bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition duration-300 shadow-sm flex items-center gap-1">
+                <span class="text-lg font-bold text-mique-gold-dark font-serif-custom">$${p.price}</span>
+                <button onclick="navigateTo('product-${p.id}')" class="px-4 py-2 rounded-xl bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition duration-300 shadow-sm flex items-center gap-1">
                     查看產品頁 ➔
                 </button>
             </div>
@@ -1286,6 +1287,7 @@ function renderStarProductsScroll() {
         `;
     }).join('');
 }
+
 
 // 確保網頁一載入，立刻渲染滾動卡片
 if (document.readyState === 'loading') {
