@@ -228,28 +228,7 @@
 </div>
 
             
-          <!-- ==================== SECRET SKINCARE SERIES (🔒 FINAL PERFECT CLOSED VERSION) ==================== -->
-<section id="page-products-secret"
-  class="py-16 flex flex-col items-center text-center"
-  style="clear:both; float:none; display:block; position:relative; z-index:1;
-         background:#faf9fc;
-         width:100vw; max-width:100vw;
-         margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw);">
-
-    <div class="text-center mb-10 max-w-2xl mx-auto px-4">
-        <span class="text-xs font-bold text-mique-gold-dark bg-mique-lavender px-3 py-1 rounded-full uppercase tracking-wider">Secret Skincare Series</span>
-        <h2 class="text-3xl font-bold font-serif-custom text-mique-purple mt-3">MIQUE 蜜刻「秘蜜保養系列」</h2>
-        <p class="text-xs text-gray-500 mt-2">包含面部角質保濕、集中美白、修護鎖水、淨瑕調理與私密清潔</p>
-    </div>
-
-    <div class="w-full max-w-5xl mx-auto px-4">
-        <div id="secret-series-grid" class="w-full"
-             style="display:grid; gap:32px; margin:0 auto;
-                    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));">
-        </div>
-    </div>
-</section>
-
+          
         <!-- ================= 2. BRAND PAGES (INTRO / CORE / HISTORY) ================= -->
         <section id="page-brand-intro" class="page-view">
             <div class="bg-mique-lavender py-12 border-b border-mique-lavender text-center">
@@ -510,7 +489,7 @@
             </div>
 
             <div class="max-w-7xl mx-auto px-4 py-16">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="secret-series-grid"></div>
+                <div class="grid gap-8" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));" id="secret-series-grid"></div>
             </div>
         </section>
 
@@ -858,10 +837,10 @@
 
 
         function renderHomeProductsPreview() {
-            const container = document.getElementById('home-products-preview');
-            container.innerHTML = productsData.slice(0, 3).map(p => createProductCardHTML(p)).join('');
-        }
-
+    const container = document.getElementById('home-products-preview');
+    if (!container) return;
+    container.innerHTML = productsData.slice(0, 3).map(p => createProductCardHTML(p)).join('');
+}
         function renderOverviewGrid() {
             const container = document.getElementById('products-overview-grid');
             if (container) {
