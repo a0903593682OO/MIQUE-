@@ -836,14 +836,23 @@
             document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
+               // 🌟 【明星商品實體圖片核心】：徹底清除舊有的預設瓶子圖案，完美換上您自己的精美產品照片！
         function generateProductSVG(type) {
-            return `
-            <svg viewBox="0 0 100 140" class="w-24 h-32 mx-auto filter drop-shadow">
-                <rect x="30" y="30" width="40" height="90" rx="8" fill="#F4EFF8"/>
-                <rect x="38" y="10" width="24" height="20" rx="2" fill="#D4AF37"/>
-                <text x="50" y="70" font-size="7" font-weight="bold" fill="#735E8A" text-anchor="middle">MIQUE</text>
-            </svg>`;
+            // 💡 1. 請在這裡對應設定五款產品要顯示的「實體圖片檔案名稱」（請確保已上傳到 GitHub）
+            const imageMapping = {
+                "water": "第二組MIQUE%204彩.jpg", // 產品 1: 蜜境保濕前導水
+                "serum": "第二組MIQUE%204彩.jpg", // 產品 2: 蜜萃光感亮膚精華 (請自由換成您實際上傳的精華液圖檔名稱)
+                "cream": "第二組MIQUE%204彩.jpg", // 產品 3: 蜜封修護鎖水乳霜
+                "wash": "產品4照片.jpg",          // 產品 4: 蜜舒柔潤潔顏慕斯
+                "intimate": "產品5照片.jpg"       // 產品 5: 蜜語私密防護潔膚露
+            };
+
+            const imgSrc = imageMapping[type] || "第二組MIQUE%204彩.jpg";
+
+            // 2. 自動輸出具備專櫃質感、圓角且內建「防破圖 onerror 備用令」的高階 img 標籤
+            return `<img src="${imgSrc}" class="w-24 h-32 mx-auto object-cover rounded-xl shadow-sm transition-transform duration-300 group-hover:scale-105" onerror="this.src='第二組MIQUE%204彩.jpg';">`;
         }
+
 
         function renderHomeProductsPreview() {
             const container = document.getElementById('home-products-preview');
