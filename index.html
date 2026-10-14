@@ -228,7 +228,23 @@
 </div>
 
             
-          
+            <!-- ==================== SECRET SKINCARE SERIES (🔒 100% PERFECT CENTERED VERSION) ==================== -->
+<div class="w-full py-16 flex flex-col items-center justify-center text-center" style="clear: both; float: none; display: block; margin: 0 auto;">
+    <div class="text-center max-w-2xl mx-auto mb-12 px-4">
+        <span class="text-mique-gold-dark text-xs font-bold tracking-widest uppercase">Secret Skincare Series</span>
+        <h2 class="text-3xl font-bold font-serif-custom text-mique-purple mt-2">MIQUE 蜜刻「秘蜜保養系列」</h2>
+        <p class="text-gray-500 text-sm mt-2">包含面部角質保濕、集中美白、修護鎖水、淨瑕調理與私密清潔</p>
+    </div>
+    
+    <!-- 🌟 核心修正：將最大寬度收緊至黃金比例 max-w-5xl，並加入強制居中，3張卡片保證絕對在正中央！ -->
+    <div class="w-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full justify-items-center justify-center" id="home-products-preview" style="margin: 0 auto !important; display: grid;">
+            <!-- 三張精美產品卡片會由 JavaScript 自動完美生成在這裡 -->
+        </div>
+    </div>
+</div>   
+        </section>
+
         <!-- ================= 2. BRAND PAGES (INTRO / CORE / HISTORY) ================= -->
         <section id="page-brand-intro" class="page-view">
             <div class="bg-mique-lavender py-12 border-b border-mique-lavender text-center">
@@ -489,7 +505,7 @@
             </div>
 
             <div class="max-w-7xl mx-auto px-4 py-16">
-                <div class="grid gap-8" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));" id="secret-series-grid"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="secret-series-grid"></div>
             </div>
         </section>
 
@@ -837,10 +853,10 @@
 
 
         function renderHomeProductsPreview() {
-    const container = document.getElementById('home-products-preview');
-    if (!container) return;
-    container.innerHTML = productsData.slice(0, 3).map(p => createProductCardHTML(p)).join('');
-}
+            const container = document.getElementById('home-products-preview');
+            container.innerHTML = productsData.slice(0, 3).map(p => createProductCardHTML(p)).join('');
+        }
+
         function renderOverviewGrid() {
             const container = document.getElementById('products-overview-grid');
             if (container) {
@@ -849,34 +865,37 @@
         }
 
                // 🌟 1. 圖二專用產品卡片生成器：照片精緻小巧、橫向版面、配備長條「詳情與多圖 EDM」按鈕
-       function createProductCardHTML(p) {
-    const edmCount = p.edmImages ? p.edmImages.length : 0;
-    return `
-    <div class="w-full bg-white rounded-3xl p-6 border border-mique-lavender shadow-sm flex flex-col justify-between group hover:shadow-md transition duration-300">
-        <div>
-            <!-- 圖片區：改用瓶子 SVG -->
-            <div class="bg-gray-50/60 rounded-2xl p-4 mb-4 flex items-center justify-center h-56 overflow-hidden border border-gray-100/50 [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full">
-                ${generateProductSVG(p.svgType)}
-            </div>
+        function createProductCardHTML(p) {
+            const edmCount = p.edmImages ? p.edmImages.length : 0;
+            return `
+            <div class="w-full max-w-[340px] bg-white rounded-3xl p-6 border border-mique-lavender shadow-sm flex flex-col justify-between group hover:shadow-md transition duration-300 mx-auto">
+                <div>
+                    <!-- 頂部精緻小巧的實體商品大照片 (高度適中，純白背景，絕不放大變形歪掉) -->
+                    <div class="bg-gray-50/60 rounded-2xl p-4 text-center mb-4 flex items-center justify-center h-44 overflow-hidden border border-gray-100/50">
+                        <img src="第二組MIQUE%204彩.jpg" class="max-h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105" alt="${p.name}" onerror="this.src='第二組MIQUE%204彩.jpg';">
+                    </div>
+                    
+                    <!-- 商品標籤與中文資訊 -->
+                    <div class="space-y-1.5">
+                        <span class="inline-block text-[11px] font-bold text-mique-gold-dark bg-mique-lavender/60 px-2.5 py-0.5 rounded-full shadow-sm">${p.tag}</span>
+                        <h3 class="font-serif-custom font-bold text-lg text-mique-purple cursor-pointer hover:text-mique-gold transition-colors" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">${p.desc || '作為保養第一步，瞬效浸潤角質層，打造肌膚極致吸水通道。'}</p>
+                    </div>
+                </div>
 
-            <div class="space-y-1.5 text-left">
-                <span class="inline-block text-[11px] font-bold text-mique-gold-dark bg-mique-lavender/60 px-2.5 py-0.5 rounded-full shadow-sm">${p.tag}</span>
-                <h3 class="font-serif-custom font-bold text-lg text-mique-purple cursor-pointer hover:text-mique-gold transition-colors" onclick="navigateTo('product-${p.id}')">${p.name}</h3>
-                <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">${p.desc || ''}</p>
-            </div>
-        </div>
+                <!-- 底部與圖二一模一樣的價格與長條形【詳情與多圖 EDM (0)】按鈕 -->
+                <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-xl font-bold text-mique-purple font-serif-custom">$${p.price}</span>
+                        <span class="text-[10px] text-gray-400 block mt-0.5">${p.volume || '150mL'}</span>
+                    </div>
+                    <button onclick="navigateTo('product-${p.id}')" class="px-4 py-2 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition duration-300 shadow-sm flex items-center gap-1">
+                        詳情與多圖 EDM (${edmCount})
+                    </button>
+                </div>
+            </div>`;
+        }
 
-        <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
-            <div class="text-left">
-                <span class="text-xl font-bold text-mique-purple font-serif-custom">$${p.price}</span>
-                <span class="text-[10px] text-gray-400 block mt-0.5">${p.volume || ''}</span>
-            </div>
-            <button onclick="navigateTo('product-${p.id}')" class="whitespace-nowrap shrink-0 px-4 py-2 rounded-full bg-mique-purple text-white text-xs font-bold hover:bg-mique-gold hover:text-mique-purple transition duration-300 shadow-sm">
-                詳情與多圖 EDM (${edmCount})
-            </button>
-        </div>
-    </div>`;
-}
         // 🌟 2. 精準控制前 3 款主力單品（前導水、亮膚精華、乳霜）在下方生成
         function renderSecretSeriesGrid() {
             const container = document.getElementById('secret-series-grid');
