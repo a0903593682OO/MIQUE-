@@ -222,15 +222,18 @@
         <p class="text-xs text-gray-500 mt-1">左右滑動探索最適合您當下肌膚狀態的秘密時刻</p>
     </div>
 
-  <!-- ✂️ 請將原本最上方這一整段程式碼剪下，讓它在上面徹底退場消失 -->
-<div class="w-full py-6">
-    <div class="text-center mb-8">
-        <span class="text-xs font-bold text-white bg-mique-purple px-4 py-1.5 rounded-full tracking-wider uppercase shadow-sm">Star Products</span>
-        <h2 class="text-2xl font-bold font-serif-custom text-mique-purple mt-3">MIQUE 蜜刻 ｜ 明星保養系列</h2>
-        <p class="text-xs text-gray-500 mt-1">左右滑動探索最適合您當下肌膚狀態的秘密時刻</p>
-    </div>
-    <div class="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth px-4" id="star-products-scroll-container" style="scrollbar-width: none; -ms-overflow-style: none;"></div>
-</div>
+  <h3 class="font-serif-custom font-bold text-lg text-mique-purple">蜜萃光感亮膚精華</h3>
+                                <p class="text-xs text-gray-500 mt-1">極致鎖水亮白 ｜ 蜂萃與維生素B5</p>
+                                <div class="mt-4 flex justify-between items-center px-2">
+                                    <span class="text-mique-gold-dark font-bold text-lg">$899</span>
+                                    <button onclick="navigateTo('product-2')" class="px-4 py-1.5 rounded-full bg-mique-purple text-white text-xs hover:bg-mique-purple-dark transition">查看產品頁</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -512,25 +515,9 @@
                 </div>
             </div>
 
-<!-- ==================== SECRET SKINCARE SERIES (🔒 REPLACED WITH SCROLL VERSION) ==================== -->
-<div class="w-full py-12 px-4 max-w-5xl mx-auto flex flex-col items-center justify-center text-center" style="clear: both; float: none;">
-    <div class="text-center mb-8">
-        <span class="text-xs font-bold text-white bg-mique-purple px-4 py-1.5 rounded-full tracking-wider uppercase shadow-sm">Secret Series Portfolio</span>
-        <h2 class="text-2xl font-bold font-serif-custom text-mique-purple mt-3">MIQUE 蜜刻 ｜ 秘蜜保養全系列</h2>
-        <p class="text-xs text-gray-500 mt-1">左右絲滑滑動 ｜ 探索最適合您生理週期的專屬祕蜜時刻</p>
-    </div>
-
-    <!-- 🌟 核心滾動外框：完美對接 id="secret-series-grid"，五款精美卡片會由 JavaScript 自動完美生成 -->
-    <div class="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth w-full px-4 justify-start items-stretch" 
-         id="secret-series-grid" 
-         style="scrollbar-width: none; -ms-overflow-style: none; display: flex; float: none; margin: 0 auto;">
-         <!-- 卡片會自動動態注入在這裡 -->
-    </div>
-</div>
-
-
-
-
+<!-<div class="max-w-7xl mx-auto px-4 py-16">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="secret-series-grid"></div>
+            </div>
         </section>
 
         <!-- 3C: INDIVIDUAL PRODUCT SUB-PAGES (#product-1 ~ #product-5) -->
