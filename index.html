@@ -506,25 +506,25 @@
 
             <div class="max-w-6xl mx-auto px-4 py-12">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="cycle-tabs">
-                    <button onclick="switchCyclePhase('follicular')" id="tab-follicular" class="cycle-tab-btn p-4 rounded-2xl bg-white border-2 border-mique-purple shadow-sm transition text-left">
+                    <button onclick="switchCyclePhase('menstrual')" id="tab-menstrual" class="cycle-tab-btn p-4 rounded-2xl bg-white border-2 border-mique-purple shadow-sm transition text-left">
                         <div class="text-[10px] font-bold text-mique-gold-dark uppercase tracking-widest">Phase 01</div>
-                        <h4 class="font-bold text-mique-purple text-base mt-0.5">濾泡期 (D1-7)</h4>
+                        <h4 class="font-bold text-mique-purple text-base mt-0.5">月經期 (D1-5)</h4>
+                        <span class="text-[11px] text-gray-500 block mt-1">敏弱乾燥期 ｜ 溫和安撫</span>
+                    </button>
+                    <button onclick="switchCyclePhase('follicular')" id="tab-follicular" class="cycle-tab-btn p-4 rounded-2xl bg-white border border-gray-200 transition text-left hover:border-mique-purple">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phase 02</div>
+                        <h4 class="font-bold text-gray-700 text-base mt-0.5">濾泡期 (D5-14)</h4>
                         <span class="text-[11px] text-gray-500 block mt-1">黃金修護期 ｜ 代謝佳</span>
                     </button>
                     <button onclick="switchCyclePhase('ovulation')" id="tab-ovulation" class="cycle-tab-btn p-4 rounded-2xl bg-white border border-gray-200 transition text-left hover:border-mique-purple">
-                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phase 02</div>
-                        <h4 class="font-bold text-gray-700 text-base mt-0.5">排卵期 (D8-14)</h4>
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phase 03</div>
+                        <h4 class="font-bold text-gray-700 text-base mt-0.5">排卵期 (D14-16)</h4>
                         <span class="text-[11px] text-gray-500 block mt-1">巔峰平穩期 ｜ 透亮保濕</span>
                     </button>
                     <button onclick="switchCyclePhase('luteal')" id="tab-luteal" class="cycle-tab-btn p-4 rounded-2xl bg-white border border-gray-200 transition text-left hover:border-mique-purple">
-                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phase 03</div>
-                        <h4 class="font-bold text-gray-700 text-base mt-0.5">黃體期 (D15-21)</h4>
-                        <span class="text-[11px] text-gray-500 block mt-1">油脂分泌旺盛 ｜ 淨瑕調理</span>
-                    </button>
-                    <button onclick="switchCyclePhase('menstrual')" id="tab-menstrual" class="cycle-tab-btn p-4 rounded-2xl bg-white border border-gray-200 transition text-left hover:border-mique-purple">
                         <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phase 04</div>
-                        <h4 class="font-bold text-gray-700 text-base mt-0.5">月經期 (D22-28)</h4>
-                        <span class="text-[11px] text-gray-500 block mt-1">敏弱乾燥期 ｜ 溫和安撫</span>
+                        <h4 class="font-bold text-gray-700 text-base mt-0.5">黃體期 (D15-29)</h4>
+                        <span class="text-[11px] text-gray-500 block mt-1">油脂分泌旺盛 ｜ 淨瑕調理</span>
                     </button>
                 </div>
 
@@ -761,8 +761,16 @@
 
         // Skincare Cycle Data
         const cycleGuideData = {
+            menstrual: {
+                title: "01. 月經期 (第 1 - 5 天)",
+                subtitle: "敏弱乾燥期 ｜ 溫和安撫 ｜ 私密潔淨",
+                hormoneStatus: "雌激素與黃體素皆降至最低點，體溫略降，免疫力與防禦力較弱。",
+                skinAnalysis: "肌膚容易乾燥、粗糙、泛紅敏弱；私密處悶熱感增加。",
+                strategy: "【極致溫和安撫 + 私密弱酸防護】拒絕刺激成分，注重私密與全面滋潤。",
+                recommendedProducts: [5, 1, 3]
+            },
             follicular: {
-                title: "01. 濾泡期 (第 1 - 7 天)",
+                title: "02. 濾泡期 (第 5 - 14 天)",
                 subtitle: "黃金修護期 ｜ 代謝佳 ｜ 完美煥膚",
                 hormoneStatus: "雌激素水準逐步上升，新陳代謝旺盛，肌膚吸收力達到最佳狀態。",
                 skinAnalysis: "角質更新速度加快，水油平衡度佳，是補充高活性滋養精華的最佳黃金時機。",
@@ -770,7 +778,7 @@
                 recommendedProducts: [2, 1, 3]
             },
             ovulation: {
-                title: "02. 排卵期 (第 8 - 14 天)",
+                title: "03. 排卵期 (第 14 - 16 天)",
                 subtitle: "巔峰平穩期 ｜ 透亮保濕 ｜ 鎖水防護",
                 hormoneStatus: "雌激素達到峰值後微幅下降，黃體素開始分泌，肌膚水份易流失。",
                 skinAnalysis: "肌膚狀態雖然亮麗，但防禦屏障變薄，若曝曬或乾燥容易產生暗沉。",
@@ -778,20 +786,12 @@
                 recommendedProducts: [1, 3, 5]
             },
             luteal: {
-                title: "03. 黃體期 (第 15 - 21 天)",
+                title: "04. 黃體期 (第 15 - 29 天)",
                 subtitle: "油脂旺盛期 ｜ 淨瑕調理 ｜ 清爽抑油",
                 hormoneStatus: "黃體素大幅上升，皮脂腺分泌異常活躍，毛孔易阻塞。",
                 skinAnalysis: "出油量明顯增加，易產生生理痘、粉刺或毛孔粗大問題。",
                 strategy: "【溫和淨瑕 + 控油舒緩】著重局部痘痘淨化與清爽無負擔補水。",
                 recommendedProducts: [4, 1, 5]
-            },
-            menstrual: {
-                title: "04. 月經期 (第 22 - 28 天)",
-                subtitle: "敏弱乾燥期 ｜ 溫和安撫 ｜ 私密潔淨",
-                hormoneStatus: "雌激素與黃體素皆降至最低點，體溫略降，免疫力與防禦力較弱。",
-                skinAnalysis: "肌膚容易乾燥、粗糙、泛紅敏弱；私密處悶熱感增加。",
-                strategy: "【極致溫和安撫 + 私密弱酸防護】拒絕刺激成分，注重私密與全面滋潤。",
-                recommendedProducts: [5, 1, 3]
             }
         };
 
@@ -828,7 +828,7 @@
             renderOverviewGrid();
             renderSecretSeriesGrid();
             renderAllProductPages();
-            switchCyclePhase('follicular');
+            switchCyclePhase('menstrual');
             checkSpinStatusOnLoad();
             navigateTo(hash);
         });
@@ -980,10 +980,10 @@
         function getMiqueOfficialEDM(productId) {
             // 在這裡設定你五款產品各自專屬的 GitHub 圖片名稱（空格已換成 %20）
             const edmMapping = {
-                1: ["化妝水EDM1.jpg","化妝水EDM2.jpg","化妝水EDM3.jpg","化妝水EDM4.jpg","化妝水EDM5.jpg","使用EDM.jpg"], // 蜜境保濕前導水
-                2: ["精華EDM1.jpg","精華EDM2.jpg","精華EDM3.jpg","精華EDM4.jpg","精華EDM5.jpg","精華EDM6.jpg"], // 蜜方淨瑕調理凝膠
-                3: ["乳霜EDM1.jpg","乳霜EDM2.jpg","乳霜EDM3.jpg","乳霜EDM4.jpg","乳霜EDM5.jpg","使用EDM.jpg"], // 密封修護鎖水乳霜 (已幫你將這款乳霜也綁定好這張漂亮的彩色海報囉！)
-                4: ["凝膠EDM1.jpg","凝膠EDM2.jpg","凝膠EDM3.jpg","凝膠EDM4.jpg","凝膠EDM5.jpg","凝膠EDM6.jpg"],
+                1: ["化妝水EDM1.jpg","化妝水EDM2.jpg","化妝水EDM3.jpg","化妝水EDM4.jpg","化妝水EDM5.jpg"], // 蜜境保濕前導水
+                2: ["第二組MIQUE%204彩.jpg"], // 蜜方淨瑕調理凝膠
+                3: ["乳霜EDM1.jpg","乳霜EDM2.jpg","乳霜EDM3.jpg","乳霜EDM4.jpg","乳霜EDM5.jpg"], // 密封修護鎖水乳霜 (已幫你將這款乳霜也綁定好這張漂亮的彩色海報囉！)
+                4: ["產品4海報.jpg"],
                 5: ["慕斯EDM1.jpg","慕斯EDM2.jpg","慕斯確認版4.jpg","慕斯確認版5.jpg","慕斯確認版6.jpg"]
             };
 
