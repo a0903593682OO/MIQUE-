@@ -838,16 +838,17 @@
         }
 
                // 🌟 【明星商品實體圖片核心】：徹底清除舊有的預設瓶子圖案，完美換上您自己的精美產品照片！
-        function generateProductSVG(type) {
-            // 💡 1. 請在這裡對應設定五款產品要顯示的「實體圖片檔案名稱」（請確保已上傳到 GitHub）
-            const imageMapping = {
-                "water": "化妝水產品照.jpg", // 產品 1: 蜜境保濕前導水
-                "serum": "精華產品照.jpg", // 產品 2: 蜜萃光感亮膚精華 (請自由換成您實際上傳的精華液圖檔名稱)
-                "cream": "乳霜產品照.jpg", // 產品 3: 蜜封修護鎖水乳霜
-                "gel": "凝膠產品照.jpg",          // 產品 4: 蜜舒柔潤潔顏慕斯
-                "mousse": "慕斯產品照.jpg"       // 產品 5: 蜜語私密防護潔膚露
-            };
+        // 💡 1. 請在這裡對應設定五款產品要顯示的「實體圖片檔案名稱」（請確保已上傳到 GitHub）
+        //    這份對照表由「商品卡片」、「週期保養寶典的搭配單品」與「結帳明細」共用
+        const imageMapping = {
+            "water": "化妝水產品照.jpg",   // 產品 1: 蜜境保濕前導水
+            "serum": "精華產品照.jpg",     // 產品 2: 蜜萃光感亮膚精華
+            "cream": "乳霜產品照.jpg",     // 產品 3: 蜜封修護鎖水乳霜
+            "gel": "凝膠產品照.jpg",       // 產品 4: 蜜方淨瑕調理凝膠
+            "mousse": "慕斯產品照.jpg"     // 產品 5: 蜜護私密淨膚慕絲
+        };
 
+        function generateProductSVG(type) {
             const imgSrc = imageMapping[type] || "第二組MIQUE%204彩.jpg";
 
             // 2. 自動輸出具備專櫃質感、圓角且內建「防破圖 onerror 備用令」的高階 img 標籤
@@ -1023,14 +1024,19 @@
             const cardContainer = document.getElementById('cycle-detail-card');
             const recProductsHTML = phase.recommendedProducts.map(pId => {
                 const prod = productsData.find(p => p.id === pId);
+                const recSrc = imageMapping[prod.svgType];
+                const recImg = recSrc
+                    ? '<img src="' + recSrc + '" alt="" class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" onerror="this.remove()">'
+                    : '';
                 return `
                 <div class="bg-mique-lavender/40 p-4 rounded-2xl border border-mique-lavender flex flex-col justify-between h-full">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-bold text-mique-purple text-xs border flex-shrink-0">
+                    <div class="flex items-center gap-3 cursor-pointer group" onclick="navigateTo('product-${prod.id}')">
+                        <div class="relative w-14 h-14 bg-white rounded-xl flex items-center justify-center font-bold text-mique-purple text-xs border flex-shrink-0 overflow-hidden">
                             ${prod.tag ? prod.tag[0] : 'M'}
+                            ${recImg}
                         </div>
                         <div class="min-w-0">
-                            <h5 class="font-bold text-xs text-mique-purple cursor-pointer hover:underline truncate" onclick="navigateTo('product-${prod.id}')">${prod.name}</h5>
+                            <h5 class="font-bold text-xs text-mique-purple group-hover:underline truncate">${prod.name}</h5>
                             <span class="text-[10px] text-gray-500 block mt-0.5">$${prod.price} ｜ ${prod.volume}</span>
                         </div>
                     </div>
@@ -1261,13 +1267,672 @@ function updateCartUI() {
 
 }
 
-function checkoutCart() {
-    alert('感謝預訂！MIQUE 客服（mique20261207@gmail.com）將竭誠為您服務。');
-    cart = [];
-    updateCartUI();
-    toggleCartDrawer();
-}
+// checkoutCart() 已改為「結帳畫面」，定義在下方的 MIQUE 結帳畫面 <script>
 
     </script>
+<!-- ================= MIQUE 結帳畫面（全螢幕；由購物車「結帳辦理」開啟）================= -->
+<style>
+  /* 只作用在結帳畫面內，不影響原本網站 */
+  #checkout-overlay .co-card { background:#fff; border:1px solid #F4EFF8; border-radius:1.5rem; padding:1.5rem; box-shadow:0 1px 3px rgba(62,39,86,.06); }
+  #checkout-overlay .co-h { display:flex; align-items:center; gap:.6rem; font-weight:700; color:#735E8A; font-size:1rem; margin-bottom:1.1rem; }
+  #checkout-overlay .co-h b { display:inline-flex; align-items:center; justify-content:center; width:1.6rem; height:1.6rem; border-radius:9999px; background:#F4EFF8; color:#735E8A; font-size:.75rem; }
+  #checkout-overlay .co-label { display:block; font-size:.75rem; font-weight:700; color:#3E2756; margin-bottom:.35rem; }
+  #checkout-overlay .co-input { width:100%; border:1px solid #E5E7EB; border-radius:.85rem; padding:.7rem .9rem; font-size:.875rem; background:#fff; color:#1f2937; outline:none; transition:border-color .15s, box-shadow .15s; }
+  #checkout-overlay .co-input:focus { border-color:#735E8A; box-shadow:0 0 0 3px rgba(115,94,138,.18); }
+  #checkout-overlay .co-input.is-invalid { border-color:#e11d48; background:#fff7f8; }
+  #checkout-overlay .co-err { margin-top:.3rem; font-size:.7rem; color:#e11d48; }
+  #checkout-overlay .co-err:empty { display:none; }
+  #checkout-overlay .co-opt { position:relative; display:block; cursor:pointer; }
+  #checkout-overlay .co-opt input { position:absolute; opacity:0; pointer-events:none; }
+  #checkout-overlay .co-opt > span { display:flex; align-items:center; justify-content:space-between; gap:.75rem; border:1.5px solid #E5E7EB; border-radius:1rem; padding:.85rem 1rem; background:#fff; transition:border-color .15s, background .15s, box-shadow .15s; }
+  #checkout-overlay .co-opt:hover > span { border-color:#9582A8; }
+  #checkout-overlay .co-opt input:checked + span { border-color:#735E8A; background:rgba(244,239,248,.7); box-shadow:0 0 0 3px rgba(115,94,138,.12); }
+  #checkout-overlay .co-opt input:focus-visible + span { outline:2px solid #735E8A; outline-offset:2px; }
+  #checkout-overlay .co-opt b { display:block; font-size:.875rem; color:#3E2756; }
+  #checkout-overlay .co-opt small { display:block; font-size:.7rem; color:#9ca3af; margin-top:.1rem; }
+  #checkout-overlay .co-opt em { font-style:normal; font-size:.8rem; font-weight:700; color:#A68222; white-space:nowrap; }
+</style>
+
+<div id="checkout-overlay" class="hidden fixed inset-0 z-[60] overflow-y-auto bg-mique-rose" role="dialog" aria-modal="true" aria-labelledby="co-title">
+
+  <!-- 頂部列 -->
+  <header class="sticky top-0 z-10 bg-white/95 backdrop-blur-md border-b border-mique-lavender">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
+      <div class="flex-1 flex justify-start">
+        <button id="co-back" type="button" onclick="closeCheckout(true)" class="flex items-center gap-1.5 text-sm font-bold text-gray-500 hover:text-mique-purple transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <span>返回購物車</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <img src="第二組MIQUE%204彩.jpg" alt="MIQUE" class="h-7 w-auto" onerror="this.style.display='none'">
+        <h1 id="co-title" class="font-serif-custom text-base sm:text-lg font-bold text-mique-purple tracking-wide">結帳</h1>
+      </div>
+      <div class="flex-1 flex justify-end">
+        <button type="button" onclick="closeCheckout(false)" aria-label="關閉結帳" class="p-2 rounded-full text-gray-400 hover:text-mique-purple hover:bg-mique-lavender transition">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+
+    <!-- 步驟列（由 JS 產生） -->
+    <ol id="co-steps" class="flex items-center justify-center mb-8 lg:mb-10" aria-label="結帳步驟"></ol>
+
+    <!-- 填寫畫面 -->
+    <div id="co-form-view" class="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_400px] items-start">
+
+      <form id="co-form" novalidate class="space-y-6">
+
+        <section class="co-card">
+          <h2 class="co-h"><b>1</b>收件人資料</h2>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+              <label class="co-label" for="co-name">姓名</label>
+              <input id="co-name" class="co-input" type="text" autocomplete="name" placeholder="請填寫收件人真實姓名">
+              <p class="co-err" id="err-name"></p>
+            </div>
+            <div>
+              <label class="co-label" for="co-phone">手機</label>
+              <input id="co-phone" class="co-input" type="tel" inputmode="numeric" autocomplete="tel" placeholder="0912345678">
+              <p class="co-err" id="err-phone"></p>
+            </div>
+            <div>
+              <label class="co-label" for="co-email">Email</label>
+              <input id="co-email" class="co-input" type="email" autocomplete="email" placeholder="name@example.com">
+              <p class="co-err" id="err-email"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="co-card">
+          <h2 class="co-h"><b>2</b>配送方式</h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <label class="co-opt">
+              <input type="radio" name="co-delivery" value="home" checked>
+              <span><span><b>宅配到府</b><small>送到您指定的地址</small></span><em id="co-fee-home"></em></span>
+            </label>
+            <label class="co-opt">
+              <input type="radio" name="co-delivery" value="cvs">
+              <span><span><b>超商取貨</b><small>送到您指定的門市</small></span><em id="co-fee-cvs"></em></span>
+            </label>
+          </div>
+
+          <div id="co-home-wrap" class="mt-5">
+            <div class="grid gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
+              <div>
+                <label class="co-label" for="co-city">縣市</label>
+                <select id="co-city" class="co-input">
+                  <option value="">請選擇</option>
+                  <option>基隆市</option><option>臺北市</option><option>新北市</option><option>桃園市</option>
+                  <option>新竹市</option><option>新竹縣</option><option>苗栗縣</option><option>臺中市</option>
+                  <option>彰化縣</option><option>南投縣</option><option>雲林縣</option><option>嘉義市</option>
+                  <option>嘉義縣</option><option>臺南市</option><option>高雄市</option><option>屏東縣</option>
+                  <option>宜蘭縣</option><option>花蓮縣</option><option>臺東縣</option><option>澎湖縣</option>
+                  <option>金門縣</option><option>連江縣</option>
+                </select>
+                <p class="co-err" id="err-city"></p>
+              </div>
+              <div>
+                <label class="co-label" for="co-address">地址</label>
+                <input id="co-address" class="co-input" type="text" autocomplete="street-address" placeholder="區／路街／號／樓">
+                <p class="co-err" id="err-address"></p>
+              </div>
+            </div>
+          </div>
+
+          <div id="co-cvs-wrap" class="mt-5 hidden">
+            <div class="grid gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
+              <div>
+                <label class="co-label" for="co-cvsBrand">超商</label>
+                <select id="co-cvsBrand" class="co-input">
+                  <option value="">請選擇</option>
+                  <option>7-ELEVEN</option><option>全家</option><option>萊爾富</option><option>OK mart</option>
+                </select>
+                <p class="co-err" id="err-cvsBrand"></p>
+              </div>
+              <div>
+                <label class="co-label" for="co-cvsStore">取貨門市</label>
+                <input id="co-cvsStore" class="co-input" type="text" placeholder="門市名稱或店號">
+                <p class="co-err" id="err-cvsStore"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="co-card">
+          <h2 class="co-h"><b>3</b>付款方式</h2>
+          <div class="grid gap-3 sm:grid-cols-3">
+            <label class="co-opt">
+              <input type="radio" name="co-payment" value="card" checked>
+              <span><span><b>信用卡</b></span></span>
+            </label>
+            <label class="co-opt">
+              <input type="radio" name="co-payment" value="atm">
+              <span><span><b>ATM 轉帳</b></span></span>
+            </label>
+            <label class="co-opt">
+              <input type="radio" name="co-payment" value="cod">
+              <span><span><b>貨到／取貨付款</b></span></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="co-card">
+          <h2 class="co-h"><b>4</b>訂單備註 <span class="text-xs font-normal text-gray-400">（選填）</span></h2>
+          <textarea id="co-note" rows="3" class="co-input" placeholder="例如：配送時間希望、包裝需求…"></textarea>
+        </section>
+
+        <div>
+          <label class="flex items-start gap-3 text-sm text-gray-600 cursor-pointer">
+            <input id="co-agree" type="checkbox" class="mt-0.5 w-4 h-4 accent-[#735E8A]">
+            <span>我已確認訂購商品與收件資訊無誤</span>
+          </label>
+          <p class="co-err" id="err-agree"></p>
+        </div>
+      </form>
+
+      <!-- 訂單明細 -->
+      <aside class="lg:sticky lg:top-24">
+        <div class="co-card">
+          <h2 class="co-h">訂單明細</h2>
+          <ul id="co-items" class="divide-y divide-gray-100"></ul>
+
+          <div class="mt-5 pt-5 border-t border-dashed border-mique-lavender">
+            <label class="co-label" for="co-coupon">優惠碼</label>
+            <div class="flex gap-2">
+              <input id="co-coupon" class="co-input uppercase" type="text" placeholder="輸入優惠碼" autocomplete="off">
+              <button type="button" onclick="coApplyCoupon()" class="shrink-0 px-5 rounded-xl bg-mique-lavender text-mique-purple text-sm font-bold hover:bg-mique-purple hover:text-white transition">套用</button>
+            </div>
+            <div id="co-coupon-msg" class="mt-2 text-xs"></div>
+            <div id="co-wheel-hint"></div>
+          </div>
+
+          <div id="co-nudge"></div>
+          <dl id="co-totals" class="mt-5 pt-5 border-t border-gray-100 space-y-2 text-sm"></dl>
+
+          <button type="submit" form="co-form" id="co-submit" class="mt-6 w-full py-3.5 rounded-full bg-mique-purple text-white font-bold tracking-wide shadow-md hover:bg-mique-purple-dark transition active:scale-[.99]">確認送出訂單</button>
+          <p class="mt-3 text-[11px] text-gray-400 text-center leading-relaxed">訂單送出後，MIQUE 客服將與您確認訂單與付款方式。</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 完成畫面（由 JS 產生） -->
+    <div id="co-success-view" class="hidden max-w-2xl mx-auto"></div>
+  </main>
+</div>
+
+<script>
+(function () {
+  /* ================= 設定區（可自行調整） ================= */
+
+  // 運費（以下數字只是預設值，請改成你們實際的運費）
+  var SHIPPING = {
+    home: { label: '宅配到府', fee: 80 },
+    cvs:  { label: '超商取貨', fee: 60 }
+  };
+  // 折扣後滿多少元免運；設成 0 代表不啟用免運
+  var FREE_SHIPPING_OVER = 1000;
+
+  // 「秘蜜全系列」包含的商品 id（MIQUE200 需買齊才可使用）
+  var SERIES_IDS = [1, 2, 3, 4, 5];
+
+  // 優惠碼（對應你轉盤抽獎的 6 種獎項）
+  //   flat   = 固定折抵金額      pct     = 全單打折（pct = 折掉幾 %）
+  //   itemPct= 指定商品打折      gift    = 贈品    perk = 禮遇（不折抵金額，由客服處理）
+  var COUPONS = {
+    'MIQUE100':   { type: 'flat', label: '專屬折價券 $100', value: 100 },
+    'MIQUE200':   { type: 'flat', label: '秘蜜全系列折扣 $200', value: 200, needSeries: true },
+    'FREE-WATER': { type: 'gift', label: '蜜境保濕前導水 試用包', gift: '蜜境保濕前導水 試用包 ×1' },
+    'MIQUEVIP':   { type: 'perk', label: '保養尊榮禮遇 VIP', note: 'VIP 尊榮禮遇將由客服於確認訂單時為您安排' },
+    'SERUM85':    { type: 'itemPct', label: '蜜萃精華 85 折', productId: 2, productName: '蜜萃光感亮膚精華', pct: 15 },
+    'MIQUE2026':  { type: 'pct', label: '幸運蜜刻 88 折', pct: 12 }
+  };
+
+  // 訂單明細的小圖：沿用上方 imageMapping（商品卡片同一份對照表）
+  var THUMBS = imageMapping;
+
+  // 訂單送出網址（選填）。填入 Google Apps Script／Formspree 等接收網址後，
+  // 每筆訂單會一併 POST 過去（JSON）。留空則訂單只存在訪客自己的瀏覽器。
+  var ORDER_ENDPOINT = '';
+
+  /* ================= 以下為程式邏輯 ================= */
+
+  var PAY_LABEL = { card: '信用卡', atm: 'ATM 轉帳', cod: '貨到／取貨付款' };
+  var S = { coupon: '', couponMsg: null, delivery: 'home', done: false };
+
+  function $(id) { return document.getElementById(id); }
+  function money(n) { return '$' + n; }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------- 優惠碼 ---------- */
+  function hasWholeSeries(items) {
+    return SERIES_IDS.every(function (id) {
+      return items.some(function (i) { return i.id === id; });
+    });
+  }
+
+  function evalCoupon(code, items, subtotal) {
+    var def = COUPONS[code];
+    if (!def) return { ok: false, msg: '查無此優惠碼，請確認後再輸入' };
+    var r = { ok: true, code: code, label: def.label, discount: 0, gift: '', note: '' };
+
+    if (def.type === 'flat') {
+      if (def.needSeries && !hasWholeSeries(items)) {
+        return { ok: false, msg: '此優惠碼需購買秘蜜全系列 5 款商品才可使用' };
+      }
+      r.discount = def.value;
+    } else if (def.type === 'pct') {
+      r.discount = Math.round(subtotal * def.pct / 100);
+    } else if (def.type === 'itemPct') {
+      var line = items.filter(function (i) { return i.id === def.productId; })
+        .reduce(function (s, i) { return s + i.price * i.qty; }, 0);
+      if (!line) return { ok: false, msg: '購物車內需有「' + def.productName + '」才可使用此優惠碼' };
+      r.discount = Math.round(line * def.pct / 100);
+    } else if (def.type === 'gift') {
+      r.gift = def.gift;
+    } else if (def.type === 'perk') {
+      r.note = def.note;
+    }
+    r.discount = Math.min(r.discount, subtotal);
+    return r;
+  }
+
+  /* ---------- 金額計算 ---------- */
+  function calc() {
+    var items = cart.slice();
+    var count = items.reduce(function (s, i) { return s + i.qty; }, 0);
+    var subtotal = items.reduce(function (s, i) { return s + i.price * i.qty; }, 0);
+
+    var coupon = null;
+    if (S.coupon) {
+      var r = evalCoupon(S.coupon, items, subtotal);
+      if (r.ok) {
+        coupon = r;
+      } else {
+        // 購物車內容改變後優惠碼不再符合資格：移除並提示
+        S.couponMsg = { ok: false, text: r.msg };
+        S.coupon = '';
+      }
+    }
+    var discount = coupon ? coupon.discount : 0;
+    var after = subtotal - discount;
+    var fee = SHIPPING[S.delivery].fee;
+    var free = FREE_SHIPPING_OVER > 0 && after >= FREE_SHIPPING_OVER;
+    var shipping = free ? 0 : fee;
+    return {
+      items: items, count: count, subtotal: subtotal, coupon: coupon, discount: discount,
+      after: after, fee: fee, free: free, shipping: shipping, total: after + shipping
+    };
+  }
+
+  /* ---------- 畫面：步驟列 ---------- */
+  function renderSteps(n) {
+    var labels = ['購物車', '填寫資料', '完成訂購'];
+    var checkSvg = '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    var h = '';
+    labels.forEach(function (t, idx) {
+      var k = idx + 1;
+      var circle;
+      if (k < n) circle = 'bg-mique-purple text-white';
+      else if (k === n) circle = 'bg-mique-gold text-white shadow-md';
+      else circle = 'bg-gray-200 text-gray-500';
+      var textCls = k <= n ? 'text-mique-purple-dark' : 'text-gray-400';
+      h += '<li class="flex items-center gap-2"' + (k === n ? ' aria-current="step"' : '') + '>' +
+             '<span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ' + circle + '">' + (k < n ? checkSvg : k) + '</span>' +
+             '<span class="text-xs font-bold ' + textCls + '">' + t + '</span>' +
+           '</li>';
+      if (idx < labels.length - 1) {
+        h += '<li aria-hidden="true" class="w-6 sm:w-14 h-px mx-2 sm:mx-3 ' + (k < n ? 'bg-mique-purple' : 'bg-gray-200') + '"></li>';
+      }
+    });
+    $('co-steps').innerHTML = h;
+  }
+
+  /* ---------- 畫面：訂單明細 ---------- */
+  function itemHTML(i) {
+    var initial = esc((i.tag && i.tag.charAt(0)) || 'M');
+    var thumbSrc = THUMBS[i.svgType];
+    var img = thumbSrc
+      ? '<img src="' + esc(thumbSrc) + '" alt="" class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">'
+      : '';
+    return '<li class="flex items-center gap-3 py-3">' +
+      '<div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-mique-lavender flex items-center justify-center text-mique-purple font-bold">' + initial + img + '</div>' +
+      '<div class="flex-1 min-w-0">' +
+        '<p class="text-sm font-bold text-mique-purple-dark truncate">' + esc(i.name) + '</p>' +
+        '<p class="text-[11px] text-gray-400 mt-0.5">' + esc(i.volume || '') + ' · ' + money(i.price) + '</p>' +
+        '<div class="mt-1.5 inline-flex items-center border border-gray-200 rounded-lg overflow-hidden">' +
+          '<button type="button" onclick="coQty(' + i.id + ',-1)" aria-label="減少數量" class="px-2.5 py-0.5 text-gray-500 hover:bg-mique-lavender">−</button>' +
+          '<span class="px-2 text-xs font-mono text-gray-700">' + i.qty + '</span>' +
+          '<button type="button" onclick="coQty(' + i.id + ',1)" aria-label="增加數量" class="px-2.5 py-0.5 text-gray-500 hover:bg-mique-lavender">+</button>' +
+        '</div>' +
+      '</div>' +
+      '<span class="text-sm font-bold text-mique-purple shrink-0">' + money(i.price * i.qty) + '</span>' +
+    '</li>';
+  }
+
+  function totalRow(label, value, valueCls) {
+    return '<div class="flex justify-between"><dt class="text-gray-500">' + label + '</dt>' +
+           '<dd class="font-medium ' + (valueCls || 'text-gray-800') + '">' + value + '</dd></div>';
+  }
+
+  function wheelPrize() {
+    try {
+      var p = JSON.parse(localStorage.getItem('mique_wheel_prize') || 'null');
+      if (p && p.code && COUPONS[String(p.code).toUpperCase()]) return p;
+    } catch (e) {}
+    return null;
+  }
+
+  function renderSummary() {
+    var c = calc();
+
+    var list = c.items.map(itemHTML).join('');
+    if (c.coupon && c.coupon.gift) {
+      list += '<li class="flex items-center justify-between gap-3 py-3 text-sm">' +
+                '<span class="text-mique-gold-dark font-bold">贈品　' + esc(c.coupon.gift) + '</span>' +
+                '<span class="text-gray-400">$0</span></li>';
+    }
+    $('co-items').innerHTML = list;
+
+    // 優惠碼訊息
+    var msg = '';
+    if (c.coupon) {
+      var extra = c.coupon.discount ? '，折抵 ' + money(c.coupon.discount) : '';
+      msg = '<span class="text-emerald-600 font-bold">已套用「' + esc(c.coupon.label) + '」' + extra + '</span>' +
+            ' <button type="button" onclick="coRemoveCoupon()" class="text-gray-400 underline hover:text-mique-purple ml-1">移除</button>';
+      if (c.coupon.note) msg += '<p class="text-gray-500 mt-1">' + esc(c.coupon.note) + '</p>';
+    } else if (S.couponMsg) {
+      msg = '<span class="text-rose-600">' + esc(S.couponMsg.text) + '</span>';
+    }
+    $('co-coupon-msg').innerHTML = msg;
+
+    // 轉盤抽中的優惠碼提示
+    var prize = wheelPrize();
+    var hint = '';
+    if (prize && S.coupon !== String(prize.code).toUpperCase()) {
+      hint = '<div class="mt-3 flex items-center justify-between gap-3 rounded-xl bg-mique-lavender/60 px-3 py-2 text-xs">' +
+               '<span class="text-mique-purple-dark">您抽中了「' + esc(prize.name) + '」</span>' +
+               '<button type="button" onclick="coUsePrize()" class="shrink-0 font-bold text-mique-gold-dark hover:underline">使用 ' + esc(prize.code) + '</button>' +
+             '</div>';
+    }
+    $('co-wheel-hint').innerHTML = hint;
+
+    // 免運提示
+    var nudge = '';
+    if (FREE_SHIPPING_OVER > 0 && !c.free && c.after > 0) {
+      nudge = '<p class="mt-5 text-xs text-mique-gold-dark bg-mique-lavender/50 rounded-lg px-3 py-2">再買 ' +
+              money(FREE_SHIPPING_OVER - c.after) + ' 即享免運</p>';
+    }
+    $('co-nudge').innerHTML = nudge;
+
+    // 金額
+    var t = totalRow('商品小計（' + c.count + ' 件）', money(c.subtotal));
+    if (c.discount > 0) t += totalRow('優惠折抵', '−' + money(c.discount), 'text-emerald-600');
+    t += totalRow('運費（' + SHIPPING[S.delivery].label + '）',
+      c.free ? '<span class="line-through text-gray-300 mr-1">' + money(c.fee) + '</span>免運' : money(c.shipping));
+    t += '<div class="flex justify-between items-baseline pt-3 mt-1 border-t border-gray-100">' +
+           '<dt class="font-bold text-mique-purple-dark">應付總額</dt>' +
+           '<dd class="text-2xl font-bold font-serif-custom text-mique-gold-dark">' + money(c.total) + '</dd></div>';
+    $('co-totals').innerHTML = t;
+
+    $('co-submit').textContent = '確認送出訂單 · ' + money(c.total);
+  }
+
+  /* ---------- 互動：數量、優惠碼 ---------- */
+  window.coQty = function (id, delta) {
+    if (delta > 0) increaseQty(id); else decreaseQty(id);
+    if (!cart.length) { closeCheckout(false); return; }
+    renderSummary();
+  };
+
+  window.coApplyCoupon = function () {
+    var code = $('co-coupon').value.trim().toUpperCase();
+    if (!code) { S.couponMsg = { ok: false, text: '請先輸入優惠碼' }; renderSummary(); return; }
+    var subtotal = cart.reduce(function (s, i) { return s + i.price * i.qty; }, 0);
+    var r = evalCoupon(code, cart, subtotal);
+    if (r.ok) { S.coupon = code; S.couponMsg = null; $('co-coupon').value = ''; }
+    else { S.couponMsg = { ok: false, text: r.msg }; }
+    renderSummary();
+  };
+
+  window.coRemoveCoupon = function () { S.coupon = ''; S.couponMsg = null; renderSummary(); };
+
+  window.coUsePrize = function () {
+    var p = wheelPrize();
+    if (!p) return;
+    $('co-coupon').value = String(p.code).toUpperCase();
+    window.coApplyCoupon();
+  };
+
+  /* ---------- 表單驗證 ---------- */
+  var FIELDS = ['name', 'phone', 'email', 'city', 'address', 'cvsBrand', 'cvsStore', 'agree'];
+
+  function val(key) { return $('co-' + key).value.trim(); }
+
+  function validate() {
+    var e = {};
+    if (!val('name')) e.name = '請填寫收件人姓名';
+    if (!/^09\d{8}$/.test(val('phone').replace(/[\s-]/g, ''))) e.phone = '請輸入正確的手機號碼（例：0912345678）';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))) e.email = '請輸入正確的 Email';
+    if (S.delivery === 'home') {
+      if (!val('city')) e.city = '請選擇縣市';
+      if (val('address').length < 5) e.address = '請填寫完整地址';
+    } else {
+      if (!val('cvsBrand')) e.cvsBrand = '請選擇超商';
+      if (!val('cvsStore')) e.cvsStore = '請填寫取貨門市名稱或店號';
+    }
+    if (!$('co-agree').checked) e.agree = '請勾選確認後再送出';
+    return e;
+  }
+
+  function showErrors(errs) {
+    var first = null;
+    FIELDS.forEach(function (k) {
+      var input = $('co-' + k), box = $('err-' + k);
+      if (errs[k]) {
+        input.classList.add('is-invalid');
+        box.textContent = errs[k];
+        if (!first) first = input;
+      } else {
+        input.classList.remove('is-invalid');
+        box.textContent = '';
+      }
+    });
+    if (first) {
+      first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      first.focus({ preventScroll: true });
+    }
+  }
+
+  /* ---------- 送出訂單 ---------- */
+  function orderNo() {
+    var d = new Date();
+    function p(n) { return String(n).padStart(2, '0'); }
+    return 'MQ' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' +
+           String(Math.floor(1000 + Math.random() * 9000));
+  }
+
+  function placeOrder() {
+    var c = calc();
+    var pay = document.querySelector('input[name="co-payment"]:checked').value;
+    var home = S.delivery === 'home';
+    var order = {
+      no: orderNo(),
+      createdAt: new Date().toISOString(),
+      items: c.items.map(function (i) { return { id: i.id, name: i.name, price: i.price, qty: i.qty }; }),
+      subtotal: c.subtotal,
+      coupon: c.coupon ? c.coupon.code : '',
+      discount: c.discount,
+      gift: c.coupon ? c.coupon.gift : '',
+      shipping: c.shipping,
+      total: c.total,
+      delivery: SHIPPING[S.delivery].label,
+      payment: PAY_LABEL[pay],
+      customer: {
+        name: val('name'), phone: val('phone'), email: val('email'),
+        address: home ? val('city') + val('address') : val('cvsBrand') + '　' + val('cvsStore')
+      },
+      note: val('note')
+    };
+
+    try {
+      var all = JSON.parse(localStorage.getItem('mique_orders') || '[]');
+      all.push(order);
+      localStorage.setItem('mique_orders', JSON.stringify(all));
+    } catch (e) {}
+
+    if (ORDER_ENDPOINT) {
+      try {
+        fetch(ORDER_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(order)
+        }).catch(function (err) { console.warn('訂單送出失敗', err); });
+      } catch (e) {}
+    }
+
+    cart = [];
+    if (typeof updateCartUI === 'function') updateCartUI();
+    renderSuccess(order);
+  }
+
+  function renderSuccess(o) {
+    S.done = true;
+    renderSteps(4);
+    var lines = o.items.map(function (i) {
+      return '<li class="flex justify-between gap-3"><span>' + esc(i.name) + ' × ' + i.qty + '</span><span>' + money(i.price * i.qty) + '</span></li>';
+    }).join('');
+    if (o.gift) lines += '<li class="flex justify-between gap-3 text-mique-gold-dark"><span>贈品　' + esc(o.gift) + '</span><span>$0</span></li>';
+    var disc = o.discount > 0
+      ? '<li class="flex justify-between text-emerald-600"><span>優惠折抵（' + esc(o.coupon) + '）</span><span>−' + money(o.discount) + '</span></li>' : '';
+
+    $('co-success-view').innerHTML =
+      '<div class="co-card text-center" style="padding:2.5rem 1.5rem">' +
+        '<div class="mx-auto w-16 h-16 rounded-full bg-mique-lavender flex items-center justify-center text-mique-purple">' +
+          '<svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' +
+        '</div>' +
+        '<h2 class="font-serif-custom text-2xl font-bold text-mique-purple mt-5">訂單已送出，感謝您的訂購！</h2>' +
+        '<p class="text-sm text-gray-500 mt-2">訂單編號　<span class="font-mono font-bold text-mique-purple-dark">' + esc(o.no) + '</span></p>' +
+        '<div class="mt-8 text-left rounded-2xl bg-mique-rose border border-mique-lavender p-5 text-sm text-gray-700">' +
+          '<ul class="space-y-2">' + lines + '</ul>' +
+          '<ul class="space-y-2 mt-3 pt-3 border-t border-dashed border-mique-lavender">' +
+            '<li class="flex justify-between"><span>商品小計</span><span>' + money(o.subtotal) + '</span></li>' + disc +
+            '<li class="flex justify-between"><span>運費</span><span>' + (o.shipping ? money(o.shipping) : '免運') + '</span></li>' +
+            '<li class="flex justify-between items-baseline font-bold text-mique-purple-dark pt-2"><span>應付總額</span><span class="text-xl font-serif-custom text-mique-gold-dark">' + money(o.total) + '</span></li>' +
+          '</ul>' +
+        '</div>' +
+        '<dl class="mt-4 text-left grid sm:grid-cols-2 gap-3 text-xs text-gray-600">' +
+          '<div class="rounded-xl bg-mique-rose border border-mique-lavender p-4"><dt class="font-bold text-mique-purple mb-1">收件資訊</dt><dd class="leading-relaxed">' +
+            esc(o.customer.name) + '　' + esc(o.customer.phone) + '<br>' + esc(o.customer.email) + '<br>' + esc(o.customer.address) + '</dd></div>' +
+          '<div class="rounded-xl bg-mique-rose border border-mique-lavender p-4"><dt class="font-bold text-mique-purple mb-1">配送與付款</dt><dd class="leading-relaxed">' +
+            esc(o.delivery) + '<br>' + esc(o.payment) + (o.note ? '<br>備註：' + esc(o.note) : '') + '</dd></div>' +
+        '</dl>' +
+        '<p class="mt-6 text-xs text-gray-500 leading-relaxed">MIQUE 客服（mique20261207@gmail.com）將依您填寫的 Email 與手機，與您確認訂單與付款方式。</p>' +
+        '<button type="button" onclick="coGoHome()" class="mt-6 px-10 py-3 rounded-full bg-mique-purple text-white font-bold hover:bg-mique-purple-dark transition">回到首頁</button>' +
+      '</div>';
+
+    $('co-form-view').classList.add('hidden');
+    $('co-success-view').classList.remove('hidden');
+    $('co-back').classList.add('invisible');
+    $('checkout-overlay').scrollTop = 0;
+  }
+
+  window.coGoHome = function () {
+    closeCheckout(false);
+    if (typeof navigateTo === 'function') navigateTo('home');
+  };
+
+  /* ---------- 開啟／關閉 ---------- */
+  function syncDelivery() {
+    var home = S.delivery === 'home';
+    $('co-home-wrap').classList.toggle('hidden', !home);
+    $('co-cvs-wrap').classList.toggle('hidden', home);
+  }
+
+  function resetAfterOrder() {
+    $('co-form').reset();
+    S.coupon = ''; S.couponMsg = null; S.delivery = 'home'; S.done = false;
+    syncDelivery();
+    showErrors({});
+    $('co-form-view').classList.remove('hidden');
+    $('co-success-view').classList.add('hidden');
+    $('co-back').classList.remove('invisible');
+  }
+
+  window.checkoutCart = function () {
+    if (typeof cart === 'undefined' || !cart.length) {
+      alert('購物車目前是空的，先挑幾樣喜歡的保養品吧！');
+      return;
+    }
+    // 若購物車抽屜還開著，先收起來
+    var drawer = $('cart-drawer');
+    if (drawer && !drawer.classList.contains('translate-x-full') && typeof toggleCartDrawer === 'function') {
+      toggleCartDrawer();
+    }
+    if (S.done) resetAfterOrder();
+    renderSteps(2);
+    renderSummary();
+    var ov = $('checkout-overlay');
+    ov.classList.remove('hidden');
+    ov.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  };
+  window.openCheckout = window.checkoutCart;
+
+  window.closeCheckout = function (backToCart) {
+    $('checkout-overlay').classList.add('hidden');
+    document.body.style.overflow = '';
+    if (S.done) resetAfterOrder();
+    if (backToCart && !S.done) {
+      var drawer = $('cart-drawer');
+      if (drawer && drawer.classList.contains('translate-x-full') && typeof toggleCartDrawer === 'function') {
+        toggleCartDrawer();
+      }
+    }
+  };
+
+  /* ---------- 初始化 ---------- */
+  $('co-fee-home').textContent = money(SHIPPING.home.fee);
+  $('co-fee-cvs').textContent = money(SHIPPING.cvs.fee);
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="co-delivery"]'), function (r) {
+    r.addEventListener('change', function () {
+      S.delivery = r.value;
+      syncDelivery();
+      renderSummary();
+    });
+  });
+
+  FIELDS.forEach(function (k) {
+    var el = $('co-' + k);
+    el.addEventListener(k === 'agree' || k === 'city' || k === 'cvsBrand' ? 'change' : 'input', function () {
+      el.classList.remove('is-invalid');
+      $('err-' + k).textContent = '';
+    });
+  });
+
+  $('co-coupon').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); window.coApplyCoupon(); }
+  });
+
+  $('co-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var errs = validate();
+    if (Object.keys(errs).length) { showErrors(errs); return; }
+    placeOrder();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !$('checkout-overlay').classList.contains('hidden')) window.closeCheckout(false);
+  });
+})();
+</script>
 </body>
 </html>
